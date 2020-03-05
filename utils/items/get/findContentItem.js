@@ -1,4 +1,5 @@
-const getItem = require('./getItem');
+const getFilterParams = require('./getFilterParams');
+const handleErrors = require('../../handleErrors');
 const getVariant = require('./getVariant');
 const getItemResult = require('./getItemResult');
 const getContentItem = require('./getContentItem');
@@ -25,7 +26,7 @@ async function findContentItemByIdentifier(z, bundle, languageId, contentTypeId,
     }
 
     // Found
-    const contentItem = await getItemResult(z, bundle, item, variant);
+    const contentItem = await getItemResult(z, bundle, item[0], variant);
 
     return [contentItem];
 }

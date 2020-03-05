@@ -3,8 +3,8 @@ function getWorkflowStepField(extras) {
         {
             list: false,
             dynamic: "get_workflow_steps.id.name",
-            label: "Workflow step",
-            key: "workflowStepId",
+            label: "Workflow steps",
+            key: "workflowStepIds",
             type: "string",
         },
         extras || {},

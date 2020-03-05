@@ -1,36 +1,36 @@
+const getAdditionalItemOutputFields = require('../fields/getAdditionalItemOutputFields');
 const contentItemSample = require('../fields/contentItemSample');
 const contentItemOutputFields = require('../fields/contentItemOutputFields');
 const getContentTypeField = require('../fields/getContentTypeField');
-const getWorkflowStepField = require('../fields/getWorkflowStepField');
 const getLanguageField = require('../fields/getLanguageField');
 const getContentItem = require('../utils/items/get/getContentItem');
 const getItemResult = require('../utils/items/get/getItemResult');
 const handleErrors = require('../utils/handleErrors');
+const randomString = require('../utils/randomString');
+const unsubscribeHook = require('../utils/unsubscribeHook');
+const getLanguage = require('../utils/languages/getLanguage');
 const getLanguageByCodename = require('../utils/languages/getLanguageByCodename');
-
-function randomString(len, an) {
-    an = an && an.toLowerCase();
-    var str = "", i = 0, min = an == "a" ? 10 : 0, max = an == "n" ? 10 : 62;
-    for (; i++ < len;) {
-        var r = Math.random() * (max - min) + min << 0;
-        str += String.fromCharCode(r += r > 9 ? r < 36 ? 55 : 61 : 48);
-    }
-    return str;
-}
+const makeHookItemOutput = require('./makeHookItemOutput');
+const hookLabel = 'Content item publish changed';
+const events = {
+    publish: 'Publish',
+    unpublish: 'Unpublish'
+};
 
 async function subscribeHook(z, bundle) {
+    //If no events were selected, respond to all of them
+    let watchedEvents = bundle.inputData.watchedEvents;
+    if(!watchedEvents) watchedEvents = Object.keys(events);
     const data = {
         // bundle.targetUrl has the Hook URL this app should call when a recipe is created.
-        name: `${bundle.inputData.name || 'Item workflow step changed'} (Zapier)`,
+        name: `${bundle.inputData.name || hookLabel} (Zapier)`,
         url: bundle.targetUrl,
         secret: randomString(32),
         triggers: {
-            workflow_step_changes: [
+            delivery_api_content_changes: [
                 {
                     type: 'content_item_variant',
-                    transitions_to: [
-                        {id: bundle.inputData.workflowStepId}
-                    ]
+                    operations: watchedEvents
                 }
             ]
         }
@@ -56,27 +56,6 @@ async function subscribeHook(z, bundle) {
     return webhook;
 }
 
-async function unsubscribeHook(z, bundle) {
-    // bundle.subscribeData contains the parsed response JSON from the subscribe
-    // request made initially.
-    const webhook = bundle.subscribeData;
-
-    const options = {
-        url: `https://manage.kontent.ai/v2/projects/${bundle.authData.projectId}/webhooks/${webhook.id}`,
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${bundle.authData.cmApiKey}`
-        },
-    };
-
-    const response = await z.request(options);
-    handleErrors(response);
-
-    return true;
-}
-
 async function parsePayload(z, bundle) {
     //const message = bundle.cleanedRequest.message;
     const items = bundle.cleanedRequest.data.items;
@@ -85,17 +64,21 @@ async function parsePayload(z, bundle) {
         throw z.errors.HaltedError('Skipped, no items found.');
     }
 
-    const languageId = bundle.inputData.languageId;
-    if (languageId && (item.language.id !== languageId)) {
-        throw new z.errors.HaltedError('Skipped, language not matched.');
+    const targetLanguageId = bundle.inputData.languageId;
+    if(targetLanguageId) {
+        const languageCodename = await getLanguage(z, bundle, targetLanguageId).codename;
+        if (languageCodename && (item.language !== languageCodename)) {
+            throw new z.errors.HaltedError('Skipped, language not matched.');
+        }
     }
 
-    const workflowStepId = bundle.inputData.workflowStepId;
-    if (workflowStepId && (item.transition_to.id !== workflowStepId)) {
-        throw new z.errors.HaltedError('Skipped, target step not matched.');
+    const targetCodename = bundle.inputData.targetCodename;
+    if (targetCodename && (item.codename !== targetCodename)) {
+        throw new z.errors.HaltedError('Skipped, codename not matched.');
     }
 
-    const resultItem = await getContentItem(z, bundle, item.item.id, item.language.id);
+    const language = await getLanguageByCodename(z, bundle, item.language);
+    const resultItem = await getContentItem(z, bundle, item.id, language.id);
     if (!resultItem) {
         throw new z.errors.HaltedError('Skipped, item not found.');
     }
@@ -105,7 +88,7 @@ async function parsePayload(z, bundle) {
         throw new z.errors.HaltedError('Skipped, content type not matched.');
     }
 
-    return [resultItem];
+    return await makeHookItemOutput(z, bundle, resultItem, 'delivery');
 }
 
 async function getFirstFoundItem(z, bundle) {
@@ -127,7 +110,27 @@ async function getFirstFoundItem(z, bundle) {
         return null;
     }
 
-    const item = items[0];
+    let item = items[0];
+
+    //try to load item with codename
+    const targetCodename = bundle.inputData.targetCodename;
+    if(targetCodename) {
+        const nameMatches = items.filter(i => i.codename === targetCodename);
+        if(nameMatches.length > 0) {
+            item = nameMatches[0];
+        }
+    }
+    else {
+        //try to load item of the given type
+        const contentTypeId = bundle.inputData.contentTypeId;
+        if(contentTypeId) {
+            const typeMatches = items.filter(i => i.type.id === contentTypeId);
+            if(typeMatches.length > 0) {
+                item = typeMatches[0];
+            }
+        }
+    }
+
     return item;
 }
 
@@ -162,34 +165,45 @@ async function getSampleItem(z, bundle) {
     }
 
     const sampleItem = await getItemResult(z, bundle, item, variants[0]);
-    return [sampleItem];
+
+    return await makeHookItemOutput(z, bundle, sampleItem, 'delivery');
 }
 
 module.exports = {
-    key: 'item_workflow_step_changed',
-    noun: 'Item workflow step changed',
+    key: 'deliver_item_changed',
+    noun: hookLabel,
     display: {
-        label: 'Item workflow step changed',
-        description: 'Triggers when an item workflow step changes.'
+        label: hookLabel,
+        description: 'Triggers when a content item is published or unpublished.'
     },
     operation: {
         inputFields: [
             {
-                label: "Webhook name",
-                helpText: "Enter a webhook name which will appear in the Kentico Kontent admin UI.",
-                key: "name",
-                type: "string",
+                label: 'Webhook name',
+                helpText: 'Enter a webhook name which will appear in the Kentico Kontent admin UI.',
+                key: 'name',
+                type: 'string',
             },
-            getWorkflowStepField({
-                required: true,
-                helpText: 'Fires for the selected workflow step.',
-            }),
+            {
+                label: 'Events to watch',
+                helpText: 'Fires only when these events are performed on a content item. Leave blank for both events.',
+                key: 'watchedEvents',
+                list: true,
+                choices: events
+            },
+            {
+                label: 'Content item code name',
+                helpText: 'Fires only for the item of the give code name. Leave blank for all content items.',
+                key: 'targetCodename',
+                type: 'string'
+            },
             getLanguageField({
                 helpText: 'Fires only for items of the given languages. Leave blank for all languages.',
             }),
             getContentTypeField({
                 helpText: 'Fires only for items of the given content type. Leave blank for all content types.',
             }),
+            getAdditionalItemOutputFields
         ],
         type: 'hook',
 

@@ -12,7 +12,7 @@ function getCmApiItemUrl(bundle, searchField, searchValue) {
         case 'id':
             return `https://manage.kontent.ai/v2/projects/${bundle.authData.projectId}/items/${searchValue}`;
 
-        case 'codename':
+        case 'system.codename':
             return `https://manage.kontent.ai/v2/projects/${bundle.authData.projectId}/items/codename/${searchValue}`;
 
         default:

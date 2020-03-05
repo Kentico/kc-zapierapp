@@ -1,61 +1,61 @@
 const standardizedSystemOutputFields = [
     {
-        key: 'system__name',
+        key: 'Item__system__name',
         label: 'Item name',
         type: 'string',
     },
     {
-        key: 'system__language',
+        key: 'Item__system__language',
         label: 'Language codename',
         type: 'string',
     },
     {
-        key: 'system__lastModified',
+        key: 'Item__system__lastModified',
         label: 'Last modified',
         type: 'datetime',
     },
     {
-        key: 'system__codename',
+        key: 'Item__system__codename',
         label: 'Item codename',
         type: 'string',
     },
     {
-        key: 'system__type',
+        key: 'Item__system__type',
         label: 'Content type codename',
         type: 'string',
     },
     {
-        key: 'system__id',
+        key: 'Item__system__id',
         label: 'Item ID',
         type: 'string',
     },
     {
-        key: 'system__externalId',
+        key: 'Item__system__externalId',
         label: 'Item external ID',
         type: 'string',
     },
     {
-        key: 'system__projectId',
+        key: 'Item__system__projectId',
         label: 'Project ID',
         type: 'string',
     },
     {
-        key: 'system__fullId',
+        key: 'Item__system__fullId',
         label: 'Full item ID',
         type: 'string',
     },
     {
-        key: 'system__languageId',
+        key: 'Item__system__languageId',
         label: 'Language ID',
         type: 'string',
     },
     {
-        key: 'system__workflowStepId',
+        key: 'Item__system__workflowStepId',
         label: 'Workflow step ID',
         type: 'string',
     },
     {
-        key: 'system__contentTypeId',
+        key: 'Item__system__contentTypeId',
         label: 'Content type ID',
         type: 'string',
     },

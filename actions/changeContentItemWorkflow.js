@@ -186,8 +186,9 @@ async function execute(z, bundle) {
         throw Error(`Full item ID has to be in format "[item id]/[language id]", found "${fullItemId}"`);
     }
 
-    const workflowStepId = bundle.inputData.workflowStepId;
-    if (!fullItemId) {
+    const workflowStepId = bundle.inputData.workflowStepIds;
+    z.console.log(bundle.inputData.workflowStepIds);
+    if (!workflowStepId) {
         throw Error('Missing target workflow step ID');
     }
 
@@ -198,7 +199,7 @@ async function execute(z, bundle) {
 
 async function getScheduledPublishingFields(z, bundle) {
     const workflowSteps = await getWorkflowSteps(z, bundle);
-    const stepId = bundle.inputData.workflowStepId;
+    const stepId = bundle.inputData.workflowStepIds;
 
     const isScheduledSelected = isScheduledWorkflowStep(stepId, workflowSteps);
     if (isScheduledSelected) {
