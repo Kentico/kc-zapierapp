@@ -222,7 +222,7 @@ const changeContentItemWorkflow = {
         "hidden": false,
         "important": true,
         "description": "Changes the content item workflow status.",
-        "label": "Change Content Item Workflow"
+        "label": "Change content item workflow"
     },
     key: "change_item_workflow",
     operation: {

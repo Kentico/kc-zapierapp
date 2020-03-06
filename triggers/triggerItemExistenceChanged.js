@@ -211,10 +211,10 @@ module.exports = {
                 type: 'string'
             },
             getLanguageField({
-                helpText: 'Fires only for items of the given languages. Leave blank for all languages.',
+                helpText: 'Fires only for variants of the given languages. Leave blank for all languages.',
             }),
             getContentTypeField({
-                helpText: 'Fires only for items of the given content type. Leave blank for all content types.',
+                helpText: 'Fires only for variants of the given content type. Leave blank for all content types.',
             }),
             getAdditionalItemOutputFields
         ],

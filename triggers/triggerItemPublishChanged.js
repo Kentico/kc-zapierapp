@@ -13,7 +13,7 @@ const unsubscribeHook = require('../utils/unsubscribeHook');
 const getLanguage = require('../utils/languages/getLanguage');
 const getLanguageByCodename = require('../utils/languages/getLanguageByCodename');
 const makeHookItemOutput = require('./makeHookItemOutput');
-const hookLabel = 'Content item publish changed';
+const hookLabel = 'Language variant publish changed';
 const events = {
     publish: 'Publish',
     unpublish: 'Unpublish'
@@ -176,11 +176,11 @@ async function getSampleItem(z, bundle) {
 }
 
 module.exports = {
-    key: 'deliver_item_publish_changed',
+    key: 'deliver_variant_publish_changed',
     noun: hookLabel,
     display: {
         label: hookLabel,
-        description: 'Triggers when a content item is published or unpublished.'
+        description: 'Triggers when a language variant is published or unpublished.'
     },
     operation: {
         inputFields: [
@@ -192,7 +192,7 @@ module.exports = {
             },
             {
                 label: 'Events to watch',
-                helpText: 'Fires only when these events are performed on a content item. Leave blank for both events.',
+                helpText: 'Fires only when these events are performed on a language. Leave blank for all events.',
                 key: 'watchedEvents',
                 list: true,
                 choices: events
@@ -204,10 +204,10 @@ module.exports = {
                 type: 'string'
             },
             getLanguageField({
-                helpText: 'Fires only for items of the given languages. Leave blank for all languages.',
+                helpText: 'Fires only for variants of the given languages. Leave blank for all languages.',
             }),
             getContentTypeField({
-                helpText: 'Fires only for items of the given content type. Leave blank for all content types.',
+                helpText: 'Fires only for variants of the given content type. Leave blank for all content types.',
             }),
             getAdditionalItemOutputFields
         ],

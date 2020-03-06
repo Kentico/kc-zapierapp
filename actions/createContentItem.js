@@ -3,7 +3,6 @@ const getContentTypeField = require('../fields/getContentTypeField');
 const getItemElementFields = require('../fields/elements/getItemElementFields');
 const createItem = require('../utils/items/create/createItem');
 const createVariant = require('../utils/items/create/createVariant');
-const findItemByIdentifier = require('../utils/items/get/findItemByIdentifier');
 const getItemResult = require('../utils/items/get/getItemResult');
 const contentItemSample = require('../fields/samples/contentItemSample');
 const contentItemOutputFields = require('../fields/contentItemOutputFields');
@@ -41,15 +40,8 @@ async function execute(z, bundle) {
     const languageId = bundle.inputData.languageId;
     const externalId = bundle.inputData.externalId;
 
-    const searchField = bundle.inputData.searchField;
-    const searchValue = bundle.inputData.searchValue;
-
-    // Check existing content item, it may be available through the find action
-    const existingItem = searchField && searchValue && await findItemByIdentifier(z, bundle, contentTypeId, searchField, searchValue);
-
-    const item = (existingItem && existingItem[0]) ? existingItem[0] : await createItem(z, bundle, name, contentTypeId, externalId);
+    const item = await createItem(z, bundle, name, contentTypeId, externalId);
     const variant = await createVariant(z, bundle, item.id, languageId, contentTypeId);
-
     const result = getItemResult(z, bundle, item, variant);
 
     return result;
@@ -60,7 +52,7 @@ const createContentItem = {
     display: {
         hidden: false,
         important: true,
-        description: "Creates a content item and its language variant using Kontent Management API. The created item is not published, but only in a Draft workflow step.",
+        description: "Creates a content item and language variant using Kontent Management API. The created item is not published, but only in the Draft workflow step.",
         label: "Create content item"
     },
     key: "create_item",
