@@ -3,7 +3,7 @@ const getContentTypeField = require('../fields/getContentTypeField');
 const itemSearchFields = require('../fields/filters/itemSearchFields');
 const getElementOutputFields = require('../fields/elements/getElementOutputFields');
 const standardizedSystemOutputFields = require('../fields/standardizedSystemOutputFields');
-const contentItemSample = require('../fields/contentItemSample');
+const contentItemSample = require('../fields/samples/contentItemSample');
 const findContentItem = require('../utils/items/get/findContentItem');
 
 async function execute(z, bundle) {

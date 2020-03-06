@@ -1,25 +1,22 @@
 const getContentItemRaw = require('../utils/items/get/getContentItemRaw');
-const getSampleWorkflowPayload = require('../fields/getSampleWorkflowPayload');
-const getSampleItemPayload = require('../fields/getSampleItemPayload');
 
-async function makeHookItemOutput(z, bundle, item, hookType) {
+async function makeHookItemOutput(z, bundle, item, payloadFunc) {
     const result = {'Item': item};
+    const payload = payloadFunc(z, bundle, item);
 
     //check additional output fields
     const selectedOutputs = bundle.inputData.selectedOutput;
     if(selectedOutputs && selectedOutputs.includes('json')) {
-        const responseText = await getContentItemRaw(z, bundle, item.system.codename, item.system.language);
-        result['Raw JSON'] = responseText;
+        if(payload.message.operation !== 'archive') {
+            const responseText = await getContentItemRaw(z, bundle, item.system.codename, item.system.language);
+            result['Raw JSON'] = responseText;
+        }
+        else {
+            result['Raw JSON'] = null;
+        }
     }
     if(selectedOutputs && selectedOutputs.includes('payload')) {
-        switch(hookType) {
-            case 'management':
-                result['Webhook payload'] = getSampleWorkflowPayload(z, bundle, item);
-                break;
-            case 'delivery':
-                result['Webhook payload'] = getSampleItemPayload(z, bundle, item);
-                break;
-        }
+        result['Webhook payload'] = payload;
     }
 
     return [result];

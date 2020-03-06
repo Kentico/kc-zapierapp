@@ -1,8 +1,7 @@
 const getLanguageField = require('../fields/getLanguageField');
 const getContentTypeField = require('../fields/getContentTypeField');
 const getItemElementFields = require('../fields/elements/getItemElementFields');
-const createItem = require('../utils/items/create/createItem');
-const createVariant = require('../utils/items/create/createVariant');
+const updateVariant = require('../utils/items/update/updateVariant');
 const findItemByIdentifier = require('../utils/items/get/findItemByIdentifier');
 const getItemResult = require('../utils/items/get/getItemResult');
 const contentItemSample = require('../fields/samples/contentItemSample');
@@ -36,34 +35,31 @@ The following inputs represent elements of a chosen content type as defined in K
 };
 
 async function execute(z, bundle) {
-    const name = bundle.inputData.name;
     const contentTypeId = bundle.inputData.contentTypeId;
     const languageId = bundle.inputData.languageId;
-    const externalId = bundle.inputData.externalId;
-
     const searchField = bundle.inputData.searchField;
     const searchValue = bundle.inputData.searchValue;
 
-    // Check existing content item, it may be available through the find action
+    // Check existing content item item, it may be available through the find action
     const existingItem = searchField && searchValue && await findItemByIdentifier(z, bundle, contentTypeId, searchField, searchValue);
-
-    const item = (existingItem && existingItem[0]) ? existingItem[0] : await createItem(z, bundle, name, contentTypeId, externalId);
-    const variant = await createVariant(z, bundle, item.id, languageId, contentTypeId);
-
-    const result = getItemResult(z, bundle, item, variant);
-
-    return result;
+    if(existingItem && existingItem.length > 0) {
+        const variant = await updateVariant(z, bundle, existingItem[0].id, languageId, contentTypeId);
+        return getItemResult(z, bundle, item, variant);
+    }
+    else {
+        throw new z.errors.HaltedError('Skipped, language variant not found.');
+    }
 }
 
-const createContentItem = {
-    noun: "New content item",
+const updateLanguageVariant = {
+    noun: "Update language variant",
     display: {
         hidden: false,
         important: true,
-        description: "Creates a content item and its language variant using Kontent Management API. The created item is not published, but only in a Draft workflow step.",
-        label: "Create content item"
+        description: "Updates an existing language variant using Kontent Management API.",
+        label: "Update language variant"
     },
-    key: "create_item",
+    key: "update_variant",
     operation: {
         perform: execute,
         inputFields: [
@@ -81,4 +77,4 @@ const createContentItem = {
     },
 };
 
-module.exports = createContentItem;
+module.exports = updateLanguageVariant;

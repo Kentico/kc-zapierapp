@@ -1,8 +1,9 @@
 const getAdditionalItemOutputFields = require('../fields/getAdditionalItemOutputFields');
-const contentItemSample = require('../fields/contentItemSample');
+const contentItemSample = require('../fields/samples/contentItemSample');
 const contentItemOutputFields = require('../fields/contentItemOutputFields');
 const getContentTypeField = require('../fields/getContentTypeField');
 const getLanguageField = require('../fields/getLanguageField');
+const getSampleItemPublishPayload = require('../fields/samples/getSampleItemPublishPayload');
 const getContentItem = require('../utils/items/get/getContentItem');
 const getItemResult = require('../utils/items/get/getItemResult');
 const handleErrors = require('../utils/handleErrors');
@@ -93,7 +94,7 @@ async function parsePayload(z, bundle) {
         throw new z.errors.HaltedError('Skipped, content type not matched.');
     }
 
-    return await makeHookItemOutput(z, bundle, resultItem, 'delivery');
+    return await makeHookItemOutput(z, bundle, resultItem, () => { return bundle.cleanedRequest });
 }
 
 async function getFirstFoundItem(z, bundle) {
@@ -171,11 +172,11 @@ async function getSampleItem(z, bundle) {
 
     const sampleItem = await getItemResult(z, bundle, item, variants[0]);
 
-    return await makeHookItemOutput(z, bundle, sampleItem, 'delivery');
+    return await makeHookItemOutput(z, bundle, sampleItem, getSampleItemPublishPayload);
 }
 
 module.exports = {
-    key: 'deliver_item_changed',
+    key: 'deliver_item_publish_changed',
     noun: hookLabel,
     display: {
         label: hookLabel,

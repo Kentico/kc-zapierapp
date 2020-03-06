@@ -1,5 +1,5 @@
-const taxonomyGroupSample = require('../fields/taxonomyGroupSample');
-const getSampleTaxonomyPayload = require('../fields/getSampleTaxonomyPayload');
+const taxonomyGroupSample = require('../fields/samples/taxonomyGroupSample');
+const getSampleTaxonomyPayload = require('../fields/samples/getSampleTaxonomyPayload');
 const getAdditionalTaxonomyOutputFields = require('../fields/getAdditionalTaxonomyOutputFields');
 const handleErrors = require('../utils/handleErrors');
 const getSecret = require('../utils/getSecret');

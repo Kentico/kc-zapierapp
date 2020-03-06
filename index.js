@@ -2,7 +2,8 @@ const authentication = require('./authentication');
 
 const triggerWorkflowStatusChanged = require('./triggers/triggerWorkflowStatusChanged');
 const triggerTaxonomyChanged = require('./triggers/triggerTaxonomyChanged');
-const triggerItemChanged = require('./triggers/triggerItemChanged');
+const triggerItemPublishChanged = require('./triggers/triggerItemPublishChanged');
+const triggerItemExistenceChanged = require('./triggers/triggerItemExistenceChanged');
 
 const getContentItems = require('./triggers/dropdowns/getContentItems');
 const getWorkflowSteps = require('./triggers/dropdowns/getWorkflowSteps');
@@ -12,6 +13,7 @@ const getLanguages = require('./triggers/dropdowns/getLanguages');
 const findContentItem = require('./searches/findContentItem');
 const findWorkflowStep = require('./searches/findWorkflowStep');
 const createContentItem = require('./actions/createContentItem');
+const updateLanguageVariant = require('./actions/updateLanguageVariant');
 const changeContentItemWorkflow = require('./actions/changeContentItemWorkflow');
 
 // We can roll up all our behaviors in an App.
@@ -35,7 +37,8 @@ const App = {
     triggers: {
         [triggerWorkflowStatusChanged.key]: triggerWorkflowStatusChanged,
         [triggerTaxonomyChanged.key]: triggerTaxonomyChanged,
-        [triggerItemChanged.key]: triggerItemChanged,
+        [triggerItemPublishChanged.key]: triggerItemPublishChanged,
+        [triggerItemExistenceChanged.key]: triggerItemExistenceChanged,
 
         // Lists for dropdowns
         [getContentTypes.key]: getContentTypes,
@@ -54,6 +57,7 @@ const App = {
     creates: {
         [createContentItem.key]: createContentItem,
         [changeContentItemWorkflow.key]: changeContentItemWorkflow,
+        [updateLanguageVariant.key]: updateLanguageVariant,
     },
 
     searchOrCreates: {
@@ -62,8 +66,8 @@ const App = {
             create: 'create_item',
             key: 'find_item',
             display: {
-                'description': 'Finds a Content item matching the provided parameters. If more items match, it returns the first found item.',
-                'label': 'Find or Create Content item'
+                'description': 'Finds a content item matching the provided parameters. If more items match, it returns the first found item.',
+                'label': 'Find or create content item'
             }
         }
     }
