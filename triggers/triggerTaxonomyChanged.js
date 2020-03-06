@@ -2,7 +2,8 @@ const taxonomyGroupSample = require('../fields/taxonomyGroupSample');
 const getSampleTaxonomyPayload = require('../fields/getSampleTaxonomyPayload');
 const getAdditionalTaxonomyOutputFields = require('../fields/getAdditionalTaxonomyOutputFields');
 const handleErrors = require('../utils/handleErrors');
-const randomString = require('../utils/randomString');
+const getSecret = require('../utils/getSecret');
+const hasValidSignature = require('../utils/hasValidSignature');
 const unsubscribeHook = require('../utils/unsubscribeHook');
 const makeHookTaxonomyOutput = require('./makeHookTaxonomyOutput');
 const hookLabel = 'Taxonomy group changed';
@@ -16,11 +17,12 @@ async function subscribeHook(z, bundle) {
     //If no events were selected, respond to all of them
     let watchedEvents = bundle.inputData.watchedEvents;
     if (!watchedEvents) watchedEvents = Object.keys(events);
+
     const data = {
         // bundle.targetUrl has the Hook URL this app should call when a recipe is created.
         name: `${bundle.inputData.name || hookLabel} (Zapier)`,
         url: bundle.targetUrl,
-        secret: randomString(32),
+        secret: getSecret(z, bundle),
         triggers: {
             delivery_api_content_changes: [
                 {
@@ -52,6 +54,10 @@ async function subscribeHook(z, bundle) {
 }
 
 async function parsePayload(z, bundle) {
+    if(!hasValidSignature(z, bundle)){
+        throw new Error('Unable to verify webhook signature.');
+    }
+
     const hookPayload = bundle.cleanedRequest;
     const taxonomies = hookPayload.data.taxonomies;
     const group = taxonomies[0];

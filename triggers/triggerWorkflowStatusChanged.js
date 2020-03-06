@@ -7,7 +7,8 @@ const getLanguageField = require('../fields/getLanguageField');
 const getContentItem = require('../utils/items/get/getContentItem');
 const getItemResult = require('../utils/items/get/getItemResult');
 const handleErrors = require('../utils/handleErrors');
-const randomString = require('../utils/randomString');
+const getSecret = require('../utils/getSecret');
+const hasValidSignature = require('../utils/hasValidSignature');
 const unsubscribeHook = require('../utils/unsubscribeHook');
 const makeHookItemOutput = require('./makeHookItemOutput');
 const hookLabel = 'Content item workflow step changed';
@@ -18,7 +19,7 @@ async function subscribeHook(z, bundle) {
         // bundle.targetUrl has the Hook URL this app should call when a recipe is created.
         name: `${bundle.inputData.name || hookLabel} (Zapier)`,
         url: bundle.targetUrl,
-        secret: randomString(32),
+        secret: getSecret(z, bundle),
         triggers: {
             workflow_step_changes: [
                 {
@@ -50,7 +51,10 @@ async function subscribeHook(z, bundle) {
 }
 
 async function parsePayload(z, bundle) {
-    //const message = bundle.cleanedRequest.message;
+    if(!hasValidSignature(z, bundle)){
+        throw new Error('Unable to verify webhook signature.');
+    }
+
     const items = bundle.cleanedRequest.data.items;
     const item = items[0];
     if (!item) {
