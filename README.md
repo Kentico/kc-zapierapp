@@ -27,11 +27,11 @@ Using the Kentico Kontent integration, you only need to configure the Zap in Zap
 1. Create a new Zap: https://zapier.com/app/zaps.
 2. In the _Choose App & Event_ field, search for `Kentico Kontent` then choose your trigger.
 
-![step 1](https://github.com/kentico-ericd/kc-zapierapp/blob/master/step1.png?raw=true)
+![step 1](https://github.com/kentico-ericd/kc-zapierapp/blob/master/images/step1.png?raw=true)
 
 3. Click __Continue__ then __Sign in to Kentico Kontent__ on the next screen. You can find the credentials on the _API Keys_ page in Kontent.
 
-![sign in](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/authenticate.png)
+![sign in](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/authenticate.png)
 
 4. Configure the conditions for your trigger. Most triggers have multiple events that can be "listened" to, and you can select multiple options or leave the field empty for all events.  
   Triggers will output the language variant or taxonomy group which fired the webhook as its output. However, each trigger also contains an __Addtional step output__ field where you can choose to output more data fromt he step, if you need it in later steps. For example, choosing _Raw JSON of variant_ will return the Delivery response for an item allowing you to access the `modular_content` later on.
