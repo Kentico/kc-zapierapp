@@ -1,6 +1,6 @@
 const handleErrors = require('../../utils/handleErrors');
 const contentItemSample = require('../../fields/samples/contentItemSample');
-const standardizedSystemOutputFields = require('../../fields/standardizedSystemOutputFields');
+const standardizedSystemOutputFields = require('../../fields/output/standardizedSystemOutputFields');
 
 async function execute(z, bundle) {
     const options = {

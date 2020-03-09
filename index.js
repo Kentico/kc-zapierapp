@@ -12,6 +12,8 @@ const getLanguages = require('./triggers/dropdowns/getLanguages');
 
 const findContentItem = require('./searches/findContentItem');
 const findWorkflowStep = require('./searches/findWorkflowStep');
+
+const deleteLanguageVariant = require('./actions/deleteLanguageVariant');
 const createContentItem = require('./actions/createContentItem');
 const updateLanguageVariant = require('./actions/updateLanguageVariant');
 const changeContentItemWorkflow = require('./actions/changeContentItemWorkflow');
@@ -58,6 +60,7 @@ const App = {
         [createContentItem.key]: createContentItem,
         [changeContentItemWorkflow.key]: changeContentItemWorkflow,
         [updateLanguageVariant.key]: updateLanguageVariant,
+        [deleteLanguageVariant.key]: deleteLanguageVariant,
     },
 
     searchOrCreates: {

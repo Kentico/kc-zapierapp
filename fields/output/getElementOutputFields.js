@@ -1,5 +1,5 @@
-const getContentTypeElements = require('./getContentTypeElements');
-const getElementFieldProps = require('./getElementFieldProps');
+const getContentTypeElements = require('../elements/getContentTypeElements');
+const getElementFieldProps = require('../elements/getElementFieldProps');
 
 async function getElementOutputFields(z, bundle, contentTypeId) {
     if (!contentTypeId) {

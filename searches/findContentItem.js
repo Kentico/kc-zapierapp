@@ -2,7 +2,7 @@ const getLanguageField = require('../fields/getLanguageField');
 const getContentTypeField = require('../fields/getContentTypeField');
 const itemSearchFields = require('../fields/filters/itemSearchFields');
 const getElementOutputFields = require('../fields/output/getElementOutputFields');
-const standardizedSystemOutputFields = require('../fields/standardizedSystemOutputFields');
+const standardizedSystemOutputFields = require('../fields/output/standardizedSystemOutputFields');
 const contentItemSample = require('../fields/samples/contentItemSample');
 const findContentItem = require('../utils/items/get/findContentItem');
 

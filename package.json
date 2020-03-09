@@ -1,6 +1,6 @@
 {
   "name": "kentico-kontent",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "An app for Kentico Kontent headless content management system.",
   "repository": "https://github.com/kentico-ericd/kc-zapierapp",
   "homepage": "https://kontent.ai/",

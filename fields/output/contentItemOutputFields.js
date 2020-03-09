@@ -1,5 +1,5 @@
 const standardizedSystemOutputFields = require('./standardizedSystemOutputFields');
-const getElementOutputFields = require('./output/getElementOutputFields');
+const getElementOutputFields = require('./getElementOutputFields');
 
 const contentItemOutputFields = [
     ...standardizedSystemOutputFields,

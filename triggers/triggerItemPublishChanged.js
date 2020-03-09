@@ -72,7 +72,9 @@ async function parsePayload(z, bundle) {
 
     const targetLanguageId = bundle.inputData.languageId;
     if(targetLanguageId) {
-        const languageCodename = await getLanguage(z, bundle, targetLanguageId).codename;
+        //language of POSTed item is a codename, get ID
+        const language = await getLanguage(z, bundle, targetLanguageId);
+        const languageCodename = language.codename;
         if (languageCodename && (item.language !== languageCodename)) {
             throw new z.errors.HaltedError('Skipped, language not matched.');
         }

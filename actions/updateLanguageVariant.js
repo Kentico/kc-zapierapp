@@ -41,7 +41,7 @@ const updateLanguageVariant = {
     display: {
         hidden: false,
         important: true,
-        description: "Updates an existing language variant using Kontent Management API. The Zap will stop here if an existing variant isn't found.",
+        description: "Updates an existing language variant using Kontent Management API.",
         label: "Update language variant"
     },
     key: "update_variant",
