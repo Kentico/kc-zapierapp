@@ -13,7 +13,7 @@ const unsubscribeHook = require('../utils/unsubscribeHook');
 const getLanguage = require('../utils/languages/getLanguage');
 const getLanguageByCodename = require('../utils/languages/getLanguageByCodename');
 const makeHookItemOutput = require('./makeHookItemOutput');
-const hookLabel = 'Language variant created, deleted or restored';
+const hookLabel = 'Variant created, deleted or restored';
 const events = {
     create: 'Create',
     archive: 'Delete',

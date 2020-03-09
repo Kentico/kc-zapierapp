@@ -217,12 +217,12 @@ async function getScheduledPublishingFields(z, bundle) {
 }
 
 const changeContentItemWorkflow = {
-    noun: "Content item workflow change",
+    noun: "Languave variant workflow change",
     display: {
         "hidden": false,
         "important": true,
-        "description": "Changes the content item workflow status.",
-        "label": "Change content item workflow"
+        "description": "Changes a language variant's workflow.",
+        "label": "Change language variant workflow step"
     },
     key: "change_item_workflow",
     operation: {

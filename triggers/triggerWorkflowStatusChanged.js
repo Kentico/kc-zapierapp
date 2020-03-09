@@ -12,7 +12,7 @@ const getSecret = require('../utils/getSecret');
 const hasValidSignature = require('../utils/hasValidSignature');
 const unsubscribeHook = require('../utils/unsubscribeHook');
 const makeHookItemOutput = require('./makeHookItemOutput');
-const hookLabel = 'Language variant workflow step changed';
+const hookLabel = 'Variant workflow step changed';
 
 async function subscribeHook(z, bundle) {
     const stepIDs = bundle.inputData.workflowStepIds.map(i => ({id: i}));

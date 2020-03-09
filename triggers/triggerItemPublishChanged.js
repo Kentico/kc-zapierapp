@@ -13,7 +13,7 @@ const unsubscribeHook = require('../utils/unsubscribeHook');
 const getLanguage = require('../utils/languages/getLanguage');
 const getLanguageByCodename = require('../utils/languages/getLanguageByCodename');
 const makeHookItemOutput = require('./makeHookItemOutput');
-const hookLabel = 'Language variant publish changed';
+const hookLabel = 'Variant published status changed';
 const events = {
     publish: 'Publish',
     unpublish: 'Unpublish'
