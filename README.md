@@ -46,25 +46,25 @@ Let's say your company manages events for a client. At this point, you've been u
 
 To start, we should have an __Event__ content type with 2 content groups- one for the event details:
 
-![event details](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/eventdetails.png?raw=true)
+![event details](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/eventdetails.png)
 
 and one for the attendees, a notification option, and a note:
 
-![event attendees](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/eventattendees.png?raw=true)
+![event attendees](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/eventattendees.png)
 
 The event's `attendee_list` is a linked item element which can only contain items from your __Contact__ content type:
 
-![contact type](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/contact.png?raw=true)
+![contact type](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/contact.png)
 
 ### Creating the Zap
 
 To reduce the amount of manual work that needs to be done, we want Zapier to create a calendar item and send emails whenever an Event is published in Kontent. The final product will look like this:
 
-![all steps](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/steps.png?raw=true)
+![all steps](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/steps.png)
 
 __1.__ Of course, we start with the trigger. For the __Trigger event__ choose _Variant published status change_. In the configuration of the step, set the following:
 
-![step 1 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step1config.png?raw=true)
+![step 1 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step1config.png)
 
 We need to select _Raw JSON of variant_ in the __Additional Step Output__ field so that we can parse the attendees modular content in the next step.
 
@@ -74,4 +74,22 @@ __2.__ Next we can use a __Code by Zapier__ step to set some variables to use in
 - __attendees__: The value of the `attendee_list` element, which contains the codenames of the linked items.
 - __notify__: the value of the `notify_attendees` element, which will contain a value only if the box was checked.
 
-![step 2 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step2config.png?raw=true)
+We need to know a little javascript here. Use JSON to parse the `modular_content` object, then use `Object.values()` to create an array. Filter the array so that only contacts from the `attendees` variable remain, then `map` the email addresses to a new array:
+
+```js
+let modular = JSON.parse(inputData.json).modular_content;
+modular = Object.values(modular);
+modular = modular.filter(m => inputData.attendees.includes(m.system.id));
+const emails = modular.map(m => m.elements.email.value);
+```
+
+Finally, we'll check whether `notify` has any value and save that for the email step of our Zap. Use the `output` variable to save our 2 objects:
+
+```js
+const notify = inputData.notify !== undefined;
+output = [{emails: emails, notify: notify}];
+```
+
+The finished step should look like this:
+
+![step 2 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step2config.png)
