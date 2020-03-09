@@ -62,13 +62,17 @@ To reduce the amount of manual work that needs to be done, we want Zapier to cre
 
 ![all steps](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/steps.png)
 
-__1.__ Of course, we start with the trigger. For the __Trigger event__ choose _Variant published status change_. In the configuration of the step, set the following:
+#### Step 1
+
+Of course, we start with the trigger. For the __Trigger event__ choose _Variant published status change_. In the configuration of the step, set the following:
 
 ![step 1 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step1config.png)
 
 We need to select _Raw JSON of variant_ in the __Additional Step Output__ field so that we can parse the attendees modular content in the next step.
 
-__2.__ Next we can use a __Code by Zapier__ step to set some variables to use in later steps. In the __Input data__ field we can load some values from the trigger to use in javascript:
+#### Step 2
+
+Next we can use a __Code by Zapier__ step to set some variables to use in later steps. In the __Input data__ field we can load some values from the trigger to use in javascript:
 
 - __json__: The raw JSON of the item, used to load the modular content (attendees).
 - __attendees__: The value of the `attendee_list` element, which contains the codenames of the linked items.
