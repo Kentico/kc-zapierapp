@@ -1,7 +1,8 @@
 const getContentItemRaw = require('../utils/items/get/getContentItemRaw');
 
 async function makeHookItemOutput(z, bundle, item, payloadFunc) {
-    const result = {'Item': item};
+    const result = {'system': item.system};
+    result['elements'] = item.elements;
     const payload = payloadFunc(z, bundle, item);
 
     //check additional output fields

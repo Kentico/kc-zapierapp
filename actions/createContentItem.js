@@ -5,7 +5,7 @@ const createItem = require('../utils/items/create/createItem');
 const createVariant = require('../utils/items/create/createVariant');
 const getItemResult = require('../utils/items/get/getItemResult');
 const contentItemSample = require('../fields/samples/contentItemSample');
-const contentItemOutputFields = require('../fields/contentItemOutputFields');
+const contentItemOutputFields = require('../fields/output/contentItemOutputFields');
 
 const itemNameField = {
     required: true,

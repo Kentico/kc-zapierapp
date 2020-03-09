@@ -52,9 +52,8 @@ async function getItemResult(z, bundle, item, variant) {
     const fullId = `${item.id}/${variant.language.id}`;
 
     const contentItem = {
-        id: fullId,
         system: {
-            projectId,
+            projectId: projectId,
             id: item.id,
             name: item.name,
             codename: item.codename,

@@ -20,7 +20,7 @@ function getSampleTaxonomyPayload(z, bundle, sampleGroup) {
       id: 'e2f99f74-4111-4033-8eff-54073fbd4e32',
       project_id: bundle.authData.projectId,
       type: 'taxonomy',
-      operation: 'archive',
+      operation: 'upsert',
       api_name: 'delivery_production',
       created_timestamp: new Date().toJSON(),
       webhook_url: bundle.targetUrl

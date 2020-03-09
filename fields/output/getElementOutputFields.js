@@ -12,7 +12,7 @@ async function getElementOutputFields(z, bundle, contentTypeId) {
         .map(element => {
             const baseProps = {
                 label: element.name,
-                key: `Item__elements__${element.codename}`,
+                key: `elements__${element.codename}`,
             };
             const typeProps = getElementFieldProps(element);
 

@@ -5,7 +5,7 @@ const updateVariant = require('../utils/items/update/updateVariant');
 const findItemByIdentifier = require('../utils/items/get/findItemByIdentifier');
 const getItemResult = require('../utils/items/get/getItemResult');
 const contentItemSample = require('../fields/samples/contentItemSample');
-const contentItemOutputFields = require('../fields/contentItemOutputFields');
+const contentItemOutputFields = require('../fields/output/contentItemOutputFields');
 const itemSearchFields = require('../fields/filters/itemSearchFields');
 
 const elementsInfoField = {

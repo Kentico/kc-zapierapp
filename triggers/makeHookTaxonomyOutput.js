@@ -1,7 +1,8 @@
 const getTaxonomyGroupRaw = require('../utils/taxonomy/get/getTaxonomyGroupRaw');
 
 async function makeHookTaxonomyOutput(z, bundle, group, payload) {
-    let returnObj = {'Taxonomy group': group};
+    let returnObj = {'system': group.system};
+    returnObj['terms'] = group.terms.map(t => t.codename);
 
     const selectedOutputs = bundle.inputData.selectedOutput;
     if(selectedOutputs && selectedOutputs.includes('json')) {

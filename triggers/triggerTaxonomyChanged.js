@@ -1,6 +1,6 @@
 const taxonomyGroupSample = require('../fields/samples/taxonomyGroupSample');
 const getSampleTaxonomyPayload = require('../fields/samples/getSampleTaxonomyPayload');
-const getAdditionalTaxonomyOutputFields = require('../fields/getAdditionalTaxonomyOutputFields');
+const getAdditionalTaxonomyOutputFields = require('../fields/output/getAdditionalTaxonomyOutputFields');
 const handleErrors = require('../utils/handleErrors');
 const getSecret = require('../utils/getSecret');
 const hasValidSignature = require('../utils/hasValidSignature');
@@ -160,5 +160,27 @@ module.exports = {
         performList: getSampleItem,
 
         sample: taxonomyGroupSample,
+        outputFields: [
+            {
+                key: 'system__id',
+                label: 'Group ID',
+                type: 'string',
+            },
+            {
+                key: 'system__name',
+                label: 'Group name',
+                type: 'string',
+            },
+            {
+                key: 'system__last_modified',
+                label: 'Last modified',
+                type: 'datetime',
+            },
+            {
+                key: 'system__codename',
+                label: 'Group codename',
+                type: 'string',
+            },
+        ]
     }
 };
