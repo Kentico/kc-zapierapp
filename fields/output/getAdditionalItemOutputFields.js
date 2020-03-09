@@ -5,7 +5,7 @@ function getAdditionalItemOutputFields(extras) {
         helpText: 'Additional data about the webhook that can be made available in later steps',
         list: true,
         choices: {
-            json: 'Raw JSON of the content item',
+            json: 'Raw JSON of variant',
             payload: 'Webhook payload'
         }
     }
