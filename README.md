@@ -50,20 +50,28 @@ To start, we should have an __Event__ content type with 2 content groups- one fo
 
 and one for the attendees, a notification option, and a note:
 
-![event details](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/eventattendees.png?raw=true)
+![event attendees](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/eventattendees.png?raw=true)
 
 The event's `attendee_list` is a linked item element which can only contain items from your __Contact__ content type:
 
-![event details](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/contact.png?raw=true)
+![contact type](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/contact.png?raw=true)
 
 ### Creating the Zap
 
 To reduce the amount of manual work that needs to be done, we want Zapier to create a calendar item and send emails whenever an Event is published in Kontent. The final product will look like this:
 
-![event details](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/steps.png?raw=true)
+![all steps](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/steps.png?raw=true)
 
-Let's start with the trigger. For the __Trigger event__ choose _Variant published status change_. In the configuration of the step, set the following:
+__1.__ Of course, we start with the trigger. For the __Trigger event__ choose _Variant published status change_. In the configuration of the step, set the following:
 
-![event details](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step1config.png?raw=true)
+![step 1 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step1config.png?raw=true)
 
 We need to select _Raw JSON of variant_ in the __Additional Step Output__ field so that we can parse the attendees modular content in the next step.
+
+__2.__ Next we can use a __Code by Zapier__ step to set some variables to use in later steps. In the __Input data__ field we can load some values from the trigger to use in javascript:
+
+- __json__: The raw JSON of the item, used to load the modular content (attendees).
+- __attendees__: The value of the `attendee_list` element, which contains the codenames of the linked items.
+- __notify__: the value of the `notify_attendees` element, which will contain a value only if the box was checked.
+
+![step 2 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step2config.png?raw=true)
