@@ -66,18 +66,25 @@ const Authentication = {
             helpText: 'Your project ID is available in the [Kentico Kontent admin UI](https://app.kontent.ai) in Project Settings > API Keys.'
         },
         {
-            label: 'Content Management API Key',
+            label: 'Management API Key',
             key: 'cmApiKey',
             type: 'string',
             required: true,
-            helpText: 'The Content Management API key is needed for Content item actions and is available in the [Kentico Kontent admin UI](https://app.kontent.ai) in Project Settings > API Keys.'
+            helpText: 'The Management API key is available in the [Kentico Kontent admin UI](https://app.kontent.ai) in Project Settings > API Keys.'
         },
         {
             label: 'Delivery Preview API Key',
             key: 'previewApiKey',
             type: 'string',
             required: true,
-            helpText: 'The Preview API key is needed for Content item triggers and is available in the [Kentico Kontent admin UI](https://app.kontent.ai) in Project Settings > API Keys.'
+            helpText: 'The Preview API key is available in the [Kentico Kontent admin UI](https://app.kontent.ai) in Project Settings > API Keys.'
+        },
+        {
+            label: 'Secure Access Key',
+            key: 'secureApiKey',
+            type: 'string',
+            required: false,
+            helpText: 'This is required for taxonomy steps if [Secure Access](https://docs.kontent.ai/tutorials/develop-apps/get-content/securing-public-access) is enabled in your project and is available in the [Kentico Kontent admin UI](https://app.kontent.ai) in Project Settings > API Keys.'
         }
     ],
     connectionLabel: '{{projectName}} - {{bundle.authData.projectId}}'

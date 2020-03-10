@@ -97,6 +97,10 @@ async function getSampleItem(z, bundle) {
         }
     };
 
+    if(bundle.authData.secureApiKey) {
+        options.headers['Authorization'] = `Bearer ${bundle.authData.secureApiKey}`;
+    }
+
     let sampleGroup;
     const response = await z.request(options);
     handleErrors(response);

@@ -10,6 +10,10 @@ async function getTaxonomyGroupRaw(z, bundle, codename) {
         }
     };
 
+    if(bundle.authData.secureApiKey) {
+        options.headers['Authorization'] = `Bearer ${bundle.authData.secureApiKey}`;
+    }
+
     const response = await z.request(options);
     handleErrors(response);
 
