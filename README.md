@@ -27,11 +27,11 @@ Using the Kentico Kontent integration, you only need to configure the Zap in Zap
 1. Create a new Zap: https://zapier.com/app/zaps.
 2. In the _Choose App & Event_ field, search for `Kentico Kontent` then choose your trigger.
 
-![step 1](https://github.com/kentico-ericd/kc-zapierapp/blob/master/images/step1.png?raw=true)
+![step 1](./images/step1.png)
 
 3. Click __Continue__ then __Sign in to Kentico Kontent__ on the next screen. You can find the credentials on the _API Keys_ page in Kontent.
 
-![sign in](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/authenticate.png?raw=true)
+![sign in](./images/authenticate.png)
 
 4. Configure the conditions for your trigger. Most triggers have multiple events that can be "listened" to, and you can select multiple options or leave the field empty for all events.  
   Triggers will output the language variant or taxonomy group which fired the webhook as its output. However, each trigger also contains an __Addtional Step Output__ field where you can choose to output more data from the step, if you need it in later steps. For example, choosing _Raw JSON of variant_ will return the Delivery response for an item allowing you to access the `modular_content` later on.
@@ -46,27 +46,29 @@ Let's say your company manages events for a client. At this point, you've been u
 
 To start, we should have an __Event__ content type with 2 content groups- one for the event details:
 
-![event details](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/eventdetails.png)
+![event details](./images/eventdetails.png)
 
 and one for the attendees, a notification option, and a note:
 
-![event attendees](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/eventattendees.png)
+![event attendees](./images/eventattendees.png)
 
 The event's `attendee_list` is a linked item element which can only contain items from your __Contact__ content type:
 
-![contact type](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/contact.png)
+![contact type](./images/contact.png)
 
 ### Creating the Zap
 
 To reduce the amount of manual work that needs to be done, we want Zapier to create a calendar item and send emails whenever an Event is published in Kontent. The final product will look like this:
 
-![all steps](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/steps.png)
+![all steps](./images/steps.png)
 
 #### Step 1
 
 Of course, we start with the trigger. For the __Trigger event__ choose _Variant published status change_. In the configuration of the step, set the following:
 
-![step 1 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step1config.png)
+![step 1 configuration](./images/step1config.png)
+
+Under __Webhook Name__ you can enter any value you'd like such as "Google Calendar Event Creation" which will appear in Kontent's Webhooks page, or you can leave it empty to use the default "Variant published status changed (Zapier)."
 
 We need to select _Raw JSON of variant_ in the __Additional Step Output__ field so that we can parse the attendees modular content in the next step.
 
@@ -96,7 +98,7 @@ output = [{emails: emails, notify: notify}];
 
 The finished step should look like this:
 
-![step 2 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step2config.png)
+![step 2 configuration](./images/step2config.png)
 
 #### Step 3
 
@@ -104,7 +106,7 @@ Our next step is to create the Google Calendar event. In __Choose App & Event__ 
 
 On the __Customize Detailed Event__ screen, select your calendar then use data from step 1 to populate these fields:
 
-![step 3 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step3config.png)
+![step 3 configuration](./images/step3config.png)
 
 In the _Attendees_ field we're loading the comma-separated email addresses we parsed from `modular_content` in step 2. From the screenshot it seems as if email addresses need to be added individually to separate lines, but the comma-separated value also works fine.
 
@@ -114,4 +116,24 @@ The above step will create the calendar event, but doesn't email attendees about
 
 In the _Only continue if..._ field, select the `notify` variable we output in step 2, and the condition _(Boolean) Is true_.
 
-![step 4 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step4config.png)
+![step 4 configuration](./images/step4config.png)
+
+#### Step 5
+
+For the final step, choose the __Gmail__ App and the __Send email__ action. Authorize the account that will send the emails, then populate the email with values from step 1. Again, we can use the comma-separated list of email addresses from step 2 in the __To__ field of the email:
+
+![step 5 configuration](./images/step5config.png)
+
+#### Turning on the Zap
+
+We're pretty much done- turn on the Zap to create the webhook in Kontent. If the On/Off switch is greyed-out in Zapier, you most likely need to test one of the steps (or, choose __Skip test__). All steps should have a green check mark in the top-left corner.
+
+When the Zap is turned on, you should see this in Kontent:
+
+![webhook](./images/webhook.png)
+
+The endpoint and secret are automatically generated by the Zapier integration and will start to work immediately. __Do not change the secret!__ Webhook signatures are automatically validated by the integration for your security, but it relies on using this exact secret which is generated by hashing several values.
+
+You can now test the Zap by publishing an Event content item in Kontent which has some Contacts linked as attendees. After a short time, you should see the "dot" next to the webhook turn green indicating that the POST was sent to Zapier. In Zapier, you can check __Task History__ in the right sidebar to check whether the Zap executed successfully:
+
+![history](./images/history.png)
