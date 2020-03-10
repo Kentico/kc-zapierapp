@@ -34,7 +34,7 @@ Using the Kentico Kontent integration, you only need to configure the Zap in Zap
 ![sign in](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/authenticate.png?raw=true)
 
 4. Configure the conditions for your trigger. Most triggers have multiple events that can be "listened" to, and you can select multiple options or leave the field empty for all events.  
-  Triggers will output the language variant or taxonomy group which fired the webhook as its output. However, each trigger also contains an __Addtional Step Output__ field where you can choose to output more data fromt he step, if you need it in later steps. For example, choosing _Raw JSON of variant_ will return the Delivery response for an item allowing you to access the `modular_content` later on.
+  Triggers will output the language variant or taxonomy group which fired the webhook as its output. However, each trigger also contains an __Addtional Step Output__ field where you can choose to output more data from the step, if you need it in later steps. For example, choosing _Raw JSON of variant_ will return the Delivery response for an item allowing you to access the `modular_content` later on.
 
 5. Click __Test and Review__ to get a sample item from your Kontent project. This allows you to configure later steps using fields from your content items.
 
@@ -72,7 +72,7 @@ We need to select _Raw JSON of variant_ in the __Additional Step Output__ field 
 
 #### Step 2
 
-Next we can use a __Code by Zapier__ step to set some variables to use in later steps. In the __Input data__ field we can load some values from the trigger to use in javascript:
+Next we can use a __Code by Zapier__ step to set some variables to use in later steps. If you're not familiar with the basics of code steps, please read [Zapier's documentation](https://zapier.com/apps/code/help). In the __Input data__ field we can load some values from the trigger to use in javascript:
 
 - __json__: The raw JSON of the item, used to load the modular content (attendees).
 - __attendees__: The value of the `attendee_list` element, which contains the codenames of the linked items.
@@ -97,3 +97,21 @@ output = [{emails: emails, notify: notify}];
 The finished step should look like this:
 
 ![step 2 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step2config.png)
+
+#### Step 3
+
+Our next step is to create the Google Calendar event. In __Choose App & Event__ select _Google Calendar_ and _Create Detailed Event_. On the next screen, you'll need to authorize a Google Account which has access to the calendar you wish to modify.
+
+On the __Customize Detailed Event__ screen, select your calendar then use data from step 1 to populate these fields:
+
+![step 3 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step3config.png)
+
+In the _Attendees_ field we're loading the comma-separated email addresses we parsed from `modular_content` in step 2. From the screenshot it seems as if email addresses need to be added individually to separate lines, but the comma-separated value also works fine.
+
+#### Step 4
+
+The above step will create the calendar event, but doesn't email attendees about its creation. We'll make a separate step for that, but we only want to email the attendees if the event had the __Notify attendees__ box checked. We converted that value to a `boolean` in step 2, so now we can use a __Filter by Zapier__ step.
+
+In the _Only continue if..._ field, select the `notify` variable we output in step 2, and the condition _(Boolean) Is true_.
+
+![step 4 configuration](https://raw.githubusercontent.com/kentico-ericd/kc-zapierapp/master/images/step4config.png)
