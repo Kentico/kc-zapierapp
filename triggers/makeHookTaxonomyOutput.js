@@ -1,29 +1,52 @@
 const getTaxonomyGroupRaw = require('../utils/taxonomy/get/getTaxonomyGroupRaw');
 
-async function makeHookTaxonomyOutput(z, bundle, group, payload) {
-    let returnObj = {'system': group.system};
-    returnObj['terms'] = group.terms.map(t => t.codename);
+async function makeHookTaxonomyOutput(z, bundle, groups, payloadFunc) {
+    let result;
+
+    if(groups) {
+        const promises = groups.map(async group => {
+            return await makeObject(z, bundle, group, payloadFunc);
+        });
+    
+        result = await Promise.all(promises);
+    }
+    else {
+        //groups is null in archive operation- only webhook can be sent
+        return [{ 'Webhook payload' : payloadFunc() }];
+    }
+    
+    return result;
+}
+
+async function makeObject(z, bundle, group, payloadFunc) {
+    const payload = payloadFunc(z, bundle, group);
+    const responseText = await getTaxonomyGroupRaw(z, bundle, group.codename);
+    const rawGroup = z.JSON.parse(responseText);
+
+     let obj = {'system': rawGroup.system};
+    if(rawGroup.terms) obj['terms'] = rawGroup.terms.map(t => t.codename);
+    else obj['terms'] = [];
 
     const selectedOutputs = bundle.inputData.selectedOutput;
     if(selectedOutputs && selectedOutputs.includes('json')) {
         if(payload.message.operation !== 'archive') {
-            const responseText = await getTaxonomyGroupRaw(z, bundle, group.system.codename);
-            const rawGroup = z.JSON.parse(responseText);
+            
             if(rawGroup.system) {
-                returnObj['Raw JSON'] = responseText;
+                obj['Raw JSON'] = responseText;
             }
             else {
-                returnObj['Raw JSON'] = null;
+                obj['Raw JSON'] = null;
             }
         }
         else {
-            returnObj['Raw JSON'] = null;
+            obj['Raw JSON'] = null;
         }
         
     }
-    if(selectedOutputs && selectedOutputs.includes('payload')) returnObj['Webhook payload'] = payload;
-
-    return [returnObj];
+    if(selectedOutputs && selectedOutputs.includes('payload')) {
+        obj['Webhook payload'] = payload;
+    }
+    return obj;
 }
 
 module.exports = makeHookTaxonomyOutput;

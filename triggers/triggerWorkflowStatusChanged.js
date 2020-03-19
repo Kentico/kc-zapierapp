@@ -3,16 +3,20 @@ const contentItemSample = require('../fields/samples/contentItemSample');
 const contentItemOutputFields = require('../fields/output/contentItemOutputFields');
 const getContentTypeField = require('../fields/getContentTypeField');
 const getWorkflowStepField = require('../fields/getWorkflowStepField');
+const codeNameField = require('../fields/codeNameField');
 const getLanguageField = require('../fields/getLanguageField');
 const getSampleWorkflowPayload = require('../fields/samples/getSampleWorkflowPayload');
 const getContentItem = require('../utils/items/get/getContentItem');
 const getItemResult = require('../utils/items/get/getItemResult');
+const getAllItems = require('../utils/items/get/getAllItems');
+const getItemVariant = require('../utils/items/get/getItemVariant');
 const handleErrors = require('../utils/handleErrors');
 const getSecret = require('../utils/getSecret');
 const hasValidSignature = require('../utils/hasValidSignature');
 const unsubscribeHook = require('../utils/unsubscribeHook');
 const makeHookItemOutput = require('./makeHookItemOutput');
 const hookLabel = 'Variant workflow step changed';
+const NUM_SAMPLE_ITEMS = 5;
 
 async function subscribeHook(z, bundle) {
     const stepIDs = bundle.inputData.workflowStepIds.map(i => ({id: i}));
@@ -72,6 +76,11 @@ async function parsePayload(z, bundle) {
         throw new z.errors.HaltedError('Skipped, target step not matched.');
     }
 
+    const targetCodename = bundle.inputData.targetCodename;
+    if (targetCodename && (item.codename !== targetCodename)) {
+        throw new z.errors.HaltedError('Skipped, codename not matched.');
+    }
+
     const resultItem = await getContentItem(z, bundle, item.item.id, item.language.id);
     if (!resultItem) {
         throw new z.errors.HaltedError('Skipped, item not found.');
@@ -85,74 +94,54 @@ async function parsePayload(z, bundle) {
     return await makeHookItemOutput(z, bundle, resultItem, () => { return bundle.cleanedRequest; });
 }
 
-async function getFirstFoundItem(z, bundle) {
-    const options = {
-        url: `https://manage.kontent.ai/v2/projects/${bundle.authData.projectId}/items`,
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${bundle.authData.cmApiKey}`
-        },
-    };
+async function getFirstNItems(z, bundle, num) {
+    let items = await getAllItems(z, bundle);
+    if(!items) return null;
 
-    const response = await z.request(options);
-    handleErrors(response);
+    //sort by last_modified
+    items.sort((a,b) => {
+        if(a.last_modified > b.last_modified) return -1;
+        if(a.last_modified < b.last_modified) return 1;
+        return 0;
+    });
 
-    const items = z.JSON.parse(response.content).items;
-    if (!items.length) {
-        return null;
+    //try to load item with codename
+    const targetCodename = bundle.inputData.targetCodename;
+    if(targetCodename) {
+        const nameMatches = items.filter(i => i.codename === targetCodename);
+        if(nameMatches.length > 0) {
+            return [nameMatches[0]];
+        }
     }
-
-    let item = null;
 
     //try to load item of the given type
     const contentTypeId = bundle.inputData.contentTypeId;
     if(contentTypeId) {
         const typeMatches = items.filter(i => i.type.id === contentTypeId);
         if(typeMatches.length > 0) {
-            item = typeMatches[0];
+            return typeMatches.slice(0, num);
         }
-        else item = items[0];
     }
-    else item = items[0];
-
-    return item;
+    
+    return items.slice(0, num);
 }
 
-async function getItemVariants(z, bundle, itemId) {
-    const options = {
-        url: `https://manage.kontent.ai/v2/projects/${bundle.authData.projectId}/items/${itemId}/variants`,
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${bundle.authData.cmApiKey}`
-        },
-    };
-
-    const response = await z.request(options);
-    handleErrors(response);
-
-    const variants = z.JSON.parse(response.content);
-    return variants;
-}
-
-
-async function getSampleItem(z, bundle) {
-    const item = await getFirstFoundItem(z, bundle);
-    if (!item) {
+async function getSampleItems(z, bundle) {
+    let items = await getFirstNItems(z, bundle, NUM_SAMPLE_ITEMS);
+    if (!items) {
         return [];
     }
 
-    const variants = await getItemVariants(z, bundle, item.id);
-    if (!variants.length) {
-        return [];
-    }
+    const promises = items.map(async item => {
+        const variant = await getItemVariant(z, bundle, item.id);
+        if(variant) {
+            const sampleItem = await getItemResult(z, bundle, item, variant);
+            return sampleItem;
+        }
+    });
 
-    const sampleItem = await getItemResult(z, bundle, item, variants[0]);
-
-    return await makeHookItemOutput(z, bundle, sampleItem, getSampleWorkflowPayload);
+    const resultItems = await Promise.all(promises);
+    return await makeHookItemOutput(z, bundle, resultItems, getSampleWorkflowPayload);
 }
 
 module.exports = {
@@ -175,6 +164,7 @@ module.exports = {
                 list: true,
                 helpText: 'Fires for the selected workflow steps.',
             }),
+            codeNameField,
             getLanguageField({
                 helpText: 'Fires only for variants of the given languages. Leave blank for all languages.',
             }),
@@ -189,7 +179,7 @@ module.exports = {
         performUnsubscribe: unsubscribeHook,
 
         perform: parsePayload,
-        performList: getSampleItem,
+        performList: getSampleItems,
 
         sample: contentItemSample,
         outputFields: contentItemOutputFields,

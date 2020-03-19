@@ -5,7 +5,7 @@ function getAdditionalTaxonomyOutputFields(extras) {
         helpText: 'Additional data about the webhook that can be made available in later steps',
         list: true,
         choices: {
-            json: 'Raw JSON of the taxonomy group (not available for Delete events)',
+            json: 'Raw JSON of the taxonomy group',
             payload: 'Webhook payload'
         }
     }

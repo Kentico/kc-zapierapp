@@ -3,9 +3,12 @@ const contentItemSample = require('../fields/samples/contentItemSample');
 const contentItemOutputFields = require('../fields/output/contentItemOutputFields');
 const getContentTypeField = require('../fields/getContentTypeField');
 const getLanguageField = require('../fields/getLanguageField');
+const codeNameField = require('../fields/codeNameField');
 const getSampleItemPublishPayload = require('../fields/samples/getSampleItemPublishPayload');
 const getContentItem = require('../utils/items/get/getContentItem');
 const getItemResult = require('../utils/items/get/getItemResult');
+const getAllItems = require('../utils/items/get/getAllItems');
+const getItemVariant = require('../utils/items/get/getItemVariant');
 const handleErrors = require('../utils/handleErrors');
 const getSecret = require('../utils/getSecret');
 const hasValidSignature = require('../utils/hasValidSignature');
@@ -14,6 +17,7 @@ const getLanguage = require('../utils/languages/getLanguage');
 const getLanguageByCodename = require('../utils/languages/getLanguageByCodename');
 const makeHookItemOutput = require('./makeHookItemOutput');
 const hookLabel = 'Variant published status changed';
+const NUM_SAMPLE_ITEMS = 5;
 const events = {
     publish: 'Publish',
     unpublish: 'Unpublish'
@@ -99,82 +103,47 @@ async function parsePayload(z, bundle) {
     return await makeHookItemOutput(z, bundle, resultItem, () => { return bundle.cleanedRequest });
 }
 
-async function getFirstFoundItem(z, bundle) {
-    const options = {
-        url: `https://manage.kontent.ai/v2/projects/${bundle.authData.projectId}/items`,
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${bundle.authData.cmApiKey}`
-        },
-    };
-
-    const response = await z.request(options);
-    handleErrors(response);
-
-    const items = z.JSON.parse(response.content).items;
-    if (!items.length) {
-        return null;
-    }
-
-    let item = items[0];
+async function getFirstNItems(z, bundle, num) {
+    let items = await getAllItems(z, bundle);
+    if(!items) return null;
 
     //try to load item with codename
     const targetCodename = bundle.inputData.targetCodename;
     if(targetCodename) {
         const nameMatches = items.filter(i => i.codename === targetCodename);
         if(nameMatches.length > 0) {
-            item = nameMatches[0];
-        }
-    }
-    else {
-        //try to load item of the given type
-        const contentTypeId = bundle.inputData.contentTypeId;
-        if(contentTypeId) {
-            const typeMatches = items.filter(i => i.type.id === contentTypeId);
-            if(typeMatches.length > 0) {
-                item = typeMatches[0];
-            }
+            return [nameMatches[0]];
         }
     }
 
-    return item;
+    //try to load item of the given type
+    const contentTypeId = bundle.inputData.contentTypeId;
+    if(contentTypeId) {
+        const typeMatches = items.filter(i => i.type.id === contentTypeId);
+        if(typeMatches.length > 0) {
+            return typeMatches.slice(0, num);
+        }
+    }
+    
+    return items.slice(0, num);
 }
 
-async function getItemVariants(z, bundle, itemId) {
-    const options = {
-        url: `https://manage.kontent.ai/v2/projects/${bundle.authData.projectId}/items/${itemId}/variants`,
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${bundle.authData.cmApiKey}`
-        },
-    };
-
-    const response = await z.request(options);
-    handleErrors(response);
-
-    const variants = z.JSON.parse(response.content);
-    return variants;
-}
-
-
-async function getSampleItem(z, bundle) {
-    const item = await getFirstFoundItem(z, bundle);
-    if (!item) {
+async function getSampleItems(z, bundle) {
+    let items = await getFirstNItems(z, bundle, NUM_SAMPLE_ITEMS);
+    if (!items) {
         return [];
     }
 
-    const variants = await getItemVariants(z, bundle, item.id);
-    if (!variants.length) {
-        return [];
-    }
+    const promises = items.map(async item => {
+        const variant = await getItemVariant(z, bundle, item.id);
+        if(variant) {
+            const sampleItem = await getItemResult(z, bundle, item, variant);
+            return sampleItem;
+        }
+    });
 
-    const sampleItem = await getItemResult(z, bundle, item, variants[0]);
-
-    return await makeHookItemOutput(z, bundle, sampleItem, getSampleItemPublishPayload);
+    const resultItems = await Promise.all(promises);
+    return await makeHookItemOutput(z, bundle, resultItems, getSampleItemPublishPayload);
 }
 
 module.exports = {
@@ -199,12 +168,7 @@ module.exports = {
                 list: true,
                 choices: events
             },
-            {
-                label: 'Content item code name',
-                helpText: 'Fires only for the item of the give code name. Leave blank for all content items.',
-                key: 'targetCodename',
-                type: 'string'
-            },
+            codeNameField,
             getLanguageField({
                 helpText: 'Fires only for variants of the given languages. Leave blank for all languages.',
             }),
@@ -219,7 +183,7 @@ module.exports = {
         performUnsubscribe: unsubscribeHook,
 
         perform: parsePayload,
-        performList: getSampleItem,
+        performList: getSampleItems,
 
         sample: contentItemSample,
         outputFields: contentItemOutputFields,

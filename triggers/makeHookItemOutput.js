@@ -1,26 +1,32 @@
 const getContentItemRaw = require('../utils/items/get/getContentItemRaw');
 
-async function makeHookItemOutput(z, bundle, item, payloadFunc) {
-    const result = {'system': item.system};
-    result['elements'] = item.elements;
-    const payload = payloadFunc(z, bundle, item);
+async function makeHookItemOutput(z, bundle, items, payloadFunc) {
+    const result = [];
 
-    //check additional output fields
-    const selectedOutputs = bundle.inputData.selectedOutput;
-    if(selectedOutputs && selectedOutputs.includes('json')) {
-        if(payload.message.operation !== 'archive') {
-            const responseText = await getContentItemRaw(z, bundle, item.system.codename, item.system.language);
-            result['Raw JSON'] = responseText;
-        }
-        else {
-            result['Raw JSON'] = null;
-        }
-    }
-    if(selectedOutputs && selectedOutputs.includes('payload')) {
-        result['Webhook payload'] = payload;
-    }
+    for(const item of items) {
+        const obj = {'system': item.system};
+        obj['elements'] = item.elements;
+        const payload = payloadFunc(z, bundle, item);
 
-    return [result];
+        //check additional output fields
+        const selectedOutputs = bundle.inputData.selectedOutput;
+        if(selectedOutputs && selectedOutputs.includes('json')) {
+            if(payload.message.operation !== 'archive') {
+                const responseText = await getContentItemRaw(z, bundle, item.system.codename, item.system.language);
+                obj['Raw JSON'] = responseText;
+            }
+            else {
+                obj['Raw JSON'] = null;
+            }
+        }
+        if(selectedOutputs && selectedOutputs.includes('payload')) {
+            obj['Webhook payload'] = payload;
+        }
+
+        result.push(obj);
+    };
+
+    return result;
 }
 
 module.exports = makeHookItemOutput;

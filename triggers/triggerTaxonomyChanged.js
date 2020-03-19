@@ -7,6 +7,7 @@ const hasValidSignature = require('../utils/hasValidSignature');
 const unsubscribeHook = require('../utils/unsubscribeHook');
 const makeHookTaxonomyOutput = require('./makeHookTaxonomyOutput');
 const hookLabel = 'Taxonomy group changed';
+const NUM_SAMPLE_ITEMS = 3;
 const events = {
     archive: 'Delete',
     restore: 'Restore',
@@ -71,16 +72,19 @@ async function parsePayload(z, bundle) {
         throw new z.errors.HaltedError('Skipped, codename not matched.');
     }
 
+    const payloadFunc = () => { return bundle.cleanedRequest; };
+
     //If responding to an 'archive' operation, taxonomy group isn't available anymore
     if(hookPayload.message.operation === 'archive') {
-        return makeHookTaxonomyOutput(z, bundle, null, hookPayload);
+        z.console.log('responding to archive event');
+        return makeHookTaxonomyOutput(z, bundle, null, payloadFunc);
     }
     else {
-        return makeHookTaxonomyOutput(z, bundle, group, hookPayload);
+        return makeHookTaxonomyOutput(z, bundle, [group], payloadFunc);
     }
 }
 
-async function getSampleItem(z, bundle) {
+async function getSampleItems(z, bundle) {
     let url = `https://deliver.kontent.ai/${bundle.authData.projectId}/taxonomies`;
     const targetCodename = bundle.inputData.targetCodename;
     if (targetCodename) url += `/${targetCodename}`;
@@ -91,9 +95,6 @@ async function getSampleItem(z, bundle) {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
-        },
-        params: {
-            limit: 1
         }
     };
 
@@ -101,28 +102,26 @@ async function getSampleItem(z, bundle) {
         options.headers['Authorization'] = `Bearer ${bundle.authData.secureApiKey}`;
     }
 
-    let sampleGroup;
+    let sampleGroups;
     const response = await z.request(options);
     handleErrors(response);
 
     const raw = z.JSON.parse(response.content);
     if (targetCodename && raw.system) {
         //Found group by codename
-        sampleGroup = raw;
+        sampleGroups = [raw];
     }
     else {
-        if(raw.taxonomies && raw.taxonomies.length> 0) {
-            //Select first group in list
-            sampleGroup = raw.taxonomies[0];
+        if(raw.taxonomies && raw.taxonomies.length > 0) {
+            sampleGroups = raw.taxonomies.slice(0, NUM_SAMPLE_ITEMS);
         }
         else {
             //No group found, load sample
-            sampleGroup = taxonomyGroupSample.taxonomies[0];
+            sampleGroups = [taxonomyGroupSample];
         }
     }
 
-    const payload = getSampleTaxonomyPayload(z, bundle, sampleGroup);
-    return await makeHookTaxonomyOutput(z, bundle, sampleGroup, payload);
+    return await makeHookTaxonomyOutput(z, bundle, sampleGroups, getSampleTaxonomyPayload);
 }
 
 module.exports = {
@@ -153,6 +152,12 @@ module.exports = {
                 key: 'targetCodename',
                 type: 'string'
             },
+            {
+                label: 'Note',
+                key: 'searchInfo',
+                helpText: 'For Delete events, only the webhook payload will be available and will always be output.',
+                type: 'copy',
+            },
             getAdditionalTaxonomyOutputFields
         ],
         type: 'hook',
@@ -161,7 +166,7 @@ module.exports = {
         performUnsubscribe: unsubscribeHook,
 
         perform: parsePayload,
-        performList: getSampleItem,
+        performList: getSampleItems,
 
         sample: taxonomyGroupSample,
         outputFields: [
