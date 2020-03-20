@@ -1,7 +1,7 @@
 const getLanguageField = require('../fields/getLanguageField');
 const getContentTypeField = require('../fields/getContentTypeField');
 const getItemElementFields = require('../fields/elements/getItemElementFields');
-const updateVariant = require('../utils/items/update/updateVariant');
+const upsertVariant = require('../utils/items/update/upsertVariant');
 const findItemByIdentifier = require('../utils/items/get/findItemByIdentifier');
 const getItemResult = require('../utils/items/get/getItemResult');
 const contentItemSample = require('../fields/samples/contentItemSample');
@@ -28,7 +28,7 @@ async function execute(z, bundle) {
     // Check existing content item item, it may be available through the find action
     const existingItem = searchField && searchValue && await findItemByIdentifier(z, bundle, contentTypeId, searchField, searchValue);
     if(existingItem && existingItem.length > 0) {
-        const variant = await updateVariant(z, bundle, existingItem[0].id, languageId, contentTypeId);
+        const variant = await upsertVariant(z, bundle, existingItem[0].id, languageId, contentTypeId);
         return getItemResult(z, bundle, existingItem[0], variant);
     }
     else {

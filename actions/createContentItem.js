@@ -2,7 +2,7 @@ const getLanguageField = require('../fields/getLanguageField');
 const getContentTypeField = require('../fields/getContentTypeField');
 const getItemElementFields = require('../fields/elements/getItemElementFields');
 const createItem = require('../utils/items/create/createItem');
-const createVariant = require('../utils/items/create/createVariant');
+const upsertVariant = require('../utils/items/update/upsertVariant');
 const getItemResult = require('../utils/items/get/getItemResult');
 const contentItemSample = require('../fields/samples/contentItemSample');
 const contentItemOutputFields = require('../fields/output/contentItemOutputFields');
@@ -41,7 +41,7 @@ async function execute(z, bundle) {
     const externalId = bundle.inputData.externalId;
 
     const item = await createItem(z, bundle, name, contentTypeId, externalId);
-    const variant = await createVariant(z, bundle, item.id, languageId, contentTypeId);
+    const variant = await upsertVariant(z, bundle, item.id, languageId, contentTypeId);
     const result = getItemResult(z, bundle, item, variant);
 
     return result;

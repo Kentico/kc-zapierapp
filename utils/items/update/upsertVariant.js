@@ -1,7 +1,7 @@
 const handleErrors = require('../../handleErrors');
 const getElementsForUpsert = require('../../elements/getElementsForUpsert');
 
-async function createVariant(z, bundle, itemId, languageId, contentTypeId) {
+async function upsertVariant(z, bundle, itemId, languageId, contentTypeId) {
     const elements = await getElementsForUpsert(z, bundle, contentTypeId);
 
     const options = {
@@ -26,4 +26,4 @@ async function createVariant(z, bundle, itemId, languageId, contentTypeId) {
     return variant;
 }
 
-module.exports = createVariant;
+module.exports = upsertVariant;
