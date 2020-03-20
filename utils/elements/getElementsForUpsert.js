@@ -3,7 +3,8 @@ const getContentTypeElements = require('../../fields/elements/getContentTypeElem
 function getElementValue(value, element) {
     switch (element.type) {
         case 'rich_text':
-            if (value.trim().startsWith('<')) {
+            if (!value) value = '';
+            if (value && value.trim().startsWith('<')) {
                 return value;
             }
             return `<p>${value}</p>`;
@@ -44,9 +45,9 @@ async function getElementsForUpsert(z, bundle, contentTypeId) {
         };
 
         //element-specific fixes
-        switch(element.type) {
+        switch (element.type) {
             case 'url_slug':
-                if(value !== '') returnObj['mode'] = 'custom';
+                if (value !== '') returnObj['mode'] = 'custom';
                 break;
         }
 
