@@ -91,7 +91,7 @@ async function parsePayload(z, bundle) {
         throw new z.errors.HaltedError('Skipped, content type not matched.');
     }
 
-    return await makeHookItemOutput(z, bundle, resultItem, () => { return bundle.cleanedRequest; });
+    return await makeHookItemOutput(z, bundle, [resultItem], () => { return bundle.cleanedRequest; });
 }
 
 async function getFirstNItems(z, bundle, num) {
@@ -148,6 +148,7 @@ module.exports = {
     key: 'management_workflow_changed',
     noun: hookLabel,
     display: {
+        important: true,
         label: hookLabel,
         description: 'Triggers when a language variant workflow step changes.'
     },

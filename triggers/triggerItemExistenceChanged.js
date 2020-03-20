@@ -106,7 +106,7 @@ async function parsePayload(z, bundle) {
             throw new z.errors.HaltedError('Skipped, content type not matched.');
         }
 
-        return await makeHookItemOutput(z, bundle, resultItem, () => { return bundle.cleanedRequest; });
+        return await makeHookItemOutput(z, bundle, [resultItem], () => { return bundle.cleanedRequest; });
     }
 }
 

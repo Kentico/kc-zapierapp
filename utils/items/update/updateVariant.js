@@ -31,16 +31,27 @@ function getElementValue(value, element) {
 async function getElements(z, bundle, contentTypeId) {
     const typeElements = await getContentTypeElements(z, bundle, contentTypeId);
     const elements = typeElements.map((element) => {
-        const value = bundle.inputData[`elements__${element.codename}`];
+        let value = bundle.inputData[`elements__${element.codename}`];
+        value = getElementValue(value, element);
         if (!value) {
             return undefined;
         }
-        return {
+
+        const returnObj = {
             element: {
                 id: element.id
             },
-            value: getElementValue(value, element)
+            value: value
         };
+
+        //element-specific fixes
+        switch(element.type) {
+            case 'url_slug':
+                if(value !== '') returnObj['mode'] = 'custom';
+                break;
+        }
+
+        return returnObj;
     }).filter(e => !!e);
 
     return elements;
