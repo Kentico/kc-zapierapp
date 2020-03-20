@@ -149,9 +149,9 @@ async function getSampleItems(z, bundle) {
         }
     });
 
-    const resultItems = await Promise.all(promises);
+    let resultItems = await Promise.all(promises);
     //remove content items that aren't translated
-    resultItems = resultItems.filter(item => item === null);
+    resultItems = resultItems.filter(item => item != null);
     
     return await makeHookItemOutput(z, bundle, resultItems, getSampleItemExistencePayload);
 }
