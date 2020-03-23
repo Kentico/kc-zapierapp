@@ -76,13 +76,8 @@ async function parsePayload(z, bundle) {
     }
 
     const targetLanguageId = bundle.inputData.languageId;
-    if(targetLanguageId) {
-        //language of POSTed item is a codename, get ID
-        const language = await getLanguage(z, bundle, targetLanguageId);
-        const languageCodename = language.codename;
-        if (languageCodename && (item.language !== languageCodename)) {
-            throw new z.errors.HaltedError('Skipped, language not matched.');
-        }
+    if (targetLanguageId && (item.language.id !== targetLanguageId)) {
+        throw new z.errors.HaltedError('Skipped, language not matched.');
     }
 
     const targetCodename = bundle.inputData.targetCodename;
@@ -96,7 +91,7 @@ async function parsePayload(z, bundle) {
     }
     else {
         const language = await getLanguageByCodename(z, bundle, item.language);
-        const resultItem = await getContentItem(z, bundle, item.id, language.id);
+        const resultItem = await getContentItem(z, bundle, item.item.id, item.language.id);
         if (!resultItem) {
             throw new z.errors.HaltedError('Skipped, item not found.');
         }

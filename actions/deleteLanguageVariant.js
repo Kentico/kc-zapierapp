@@ -28,7 +28,7 @@ const deleteLanguageVariant = {
     noun: "Delete language variant",
     display: {
         hidden: false,
-        important: true,
+        important: false,
         description: "Deletes an existing language variant using Kontent Management API.",
         label: "Delete language variant"
     },

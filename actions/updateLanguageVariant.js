@@ -4,6 +4,9 @@ const getItemElementFields = require('../fields/elements/getItemElementFields');
 const upsertVariant = require('../utils/items/update/upsertVariant');
 const findItemByIdentifier = require('../utils/items/get/findItemByIdentifier');
 const getItemResult = require('../utils/items/get/getItemResult');
+const getVariant = require('../utils/items/get/getVariant');
+const getWorkflowSteps = require('../utils/workflows/getWorkflowSteps');
+const handleErrors = require('../utils/handleErrors');
 const contentItemSample = require('../fields/samples/contentItemSample');
 const contentItemOutputFields = require('../fields/output/contentItemOutputFields');
 const itemSearchFields = require('../fields/filters/itemSearchFields');
@@ -28,12 +31,50 @@ async function execute(z, bundle) {
     // Check existing content item item, it may be available through the find action
     const existingItem = searchField && searchValue && await findItemByIdentifier(z, bundle, contentTypeId, searchField, searchValue);
     if(existingItem && existingItem.length > 0) {
-        const variant = await upsertVariant(z, bundle, existingItem[0].id, languageId, contentTypeId);
-        return getItemResult(z, bundle, existingItem[0], variant);
+        
+        const existingVariant = await getVariant(z, bundle, existingItem[0].id, languageId);
+        if(existingVariant) {
+            return await tryUpdate(z, bundle, existingVariant, existingItem[0]);
+        }
     }
-    else {
-        throw new z.errors.HaltedError('Skipped, language variant not found.');
+
+    throw new z.errors.HaltedError('Skipped, language variant not found.');
+}
+
+function isPublishedWorkflowStep(stepId, workflowSteps) {
+    const lastStep = workflowSteps[workflowSteps.length - 1];
+
+    return lastStep && (lastStep.id === stepId) && (lastStep.name === "Published");
+}
+
+async function createNewVersion(z, bundle, itemId, languageId) {
+    const options = {
+        url: `https://manage.kontent.ai/v2/projects/${bundle.authData.projectId}/items/${itemId}/variants/${languageId}/new-version`,
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${bundle.authData.cmApiKey}`
+        },
+        params: {},
+    };
+
+    const response = await z.request(options);
+    handleErrors(response);
+}
+
+async function tryUpdate(z, bundle, variant, item) {
+    const workflowSteps = await getWorkflowSteps(z, bundle);
+    const currentStepId = variant.workflow_step.id;
+
+    const isPublished = isPublishedWorkflowStep(currentStepId, workflowSteps);
+    if (isPublished) {
+        // Create new version first
+        await createNewVersion(z, bundle, variant.item.id, variant.language.id);
     }
+
+    result = await upsertVariant(z, bundle, item.id, variant.language.id, item.type.id);
+    return await getItemResult(z, bundle, item, result);
 }
 
 const updateLanguageVariant = {
@@ -41,7 +82,7 @@ const updateLanguageVariant = {
     display: {
         hidden: false,
         important: true,
-        description: "Updates a language variant using Kontent Management API, or creates it if it doesn't exist.",
+        description: "Updates a language variant using Kontent Management API.",
         label: "Update language variant"
     },
     key: "update_variant",
