@@ -18,9 +18,11 @@ async function getSearchField(z, bundle, contentTypeId) {
         { value: 'externalId', sample: 'externalId', label: 'External ID' },
         { value: `${SystemPrefix}codename`, sample: `${SystemPrefix}codename`, label: 'Code name' }
     ];
-
+    
     for (var i = 0; i < elements.length; i++) {
         const element = elements[i];
+        if(element.type === 'guidelines') continue;
+
         switch (element.type) {
             case 'text':
             case 'custom':
@@ -34,7 +36,7 @@ async function getSearchField(z, bundle, contentTypeId) {
                 choices.push({
                     value: `${ElementsPrefix}${element.codename}`,
                     sample: `${ElementsPrefix}${element.codename}`,
-                    label: element.name
+                    label: element.name || element.codename
                 });
         }
     }
