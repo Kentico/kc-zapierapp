@@ -53,7 +53,7 @@ const createContentItem = {
         hidden: false,
         important: true,
         description: "Creates a content item and language variant using Kontent Management API. The created item is not published, but only in the Draft workflow step.",
-        label: "Create content item"
+        label: "Create Content Item"
     },
     key: "create_item",
     operation: {

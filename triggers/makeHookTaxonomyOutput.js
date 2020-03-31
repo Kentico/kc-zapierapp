@@ -20,10 +20,10 @@ async function makeHookTaxonomyOutput(z, bundle, groups, payloadFunc) {
 
 async function makeObject(z, bundle, group, payloadFunc) {
     const payload = payloadFunc(z, bundle, group);
-    const responseText = await getTaxonomyGroupRaw(z, bundle, group.codename);
+    const responseText = await getTaxonomyGroupRaw(z, bundle, payload.data.taxonomies[0].codename);
     const rawGroup = z.JSON.parse(responseText);
 
-     let obj = {'system': rawGroup.system};
+    let obj = {'system': rawGroup.system};
     if(rawGroup.terms) obj['terms'] = rawGroup.terms.map(t => t.codename);
     else obj['terms'] = [];
 

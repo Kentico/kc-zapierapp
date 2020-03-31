@@ -32,7 +32,7 @@ const findWorkflowStep = {
         hidden: false,
         important: false,
         description: 'Finds a workflow step based on its name.',
-        label: 'Find workflow step',
+        label: 'Find Workflow Step',
     },
     key: 'find_workflow_step',
     operation: {

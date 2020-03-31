@@ -6,7 +6,7 @@ const getSecret = require('../utils/getSecret');
 const hasValidSignature = require('../utils/hasValidSignature');
 const unsubscribeHook = require('../utils/unsubscribeHook');
 const makeHookTaxonomyOutput = require('./makeHookTaxonomyOutput');
-const hookLabel = 'Taxonomy group changed';
+const hookLabel = 'Taxonomy Group Changed';
 const NUM_SAMPLE_ITEMS = 3;
 const events = {
     archive: 'Delete',

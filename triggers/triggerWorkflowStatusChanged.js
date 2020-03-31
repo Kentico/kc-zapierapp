@@ -15,7 +15,7 @@ const getSecret = require('../utils/getSecret');
 const hasValidSignature = require('../utils/hasValidSignature');
 const unsubscribeHook = require('../utils/unsubscribeHook');
 const makeHookItemOutput = require('./makeHookItemOutput');
-const hookLabel = 'Variant workflow step changed';
+const hookLabel = 'Variant Workflow Step Changed';
 const NUM_SAMPLE_ITEMS = 5;
 
 async function subscribeHook(z, bundle) {

@@ -25,7 +25,7 @@ module.exports = {
         hidden: false,
         important: true,
         description: 'Finds a content item matching the provided parameters. If more items match, it returns the first found item.',
-        label: 'Find content item'
+        label: 'Find Content Item'
     },
     key: 'find_item',
     operation: {

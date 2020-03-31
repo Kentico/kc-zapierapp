@@ -59,7 +59,7 @@ const Authentication = {
     test: execute,
     fields: [
         {
-            label: 'Kentico Kontent Project ID',
+            label: 'Delivery API Project ID',
             key: 'projectId',
             type: 'string',
             required: true,
@@ -73,11 +73,11 @@ const Authentication = {
             helpText: 'The Management API key is available in the [Kentico Kontent admin UI](https://app.kontent.ai) in Project Settings > API Keys.'
         },
         {
-            label: 'Delivery Preview API Key',
+            label: 'Preview API Key',
             key: 'previewApiKey',
             type: 'string',
             required: true,
-            helpText: 'The Preview API key is available in the [Kentico Kontent admin UI](https://app.kontent.ai) in Project Settings > API Keys.'
+            helpText: 'The Preview API key is available in the [Kentico Kontent admin UI](https://app.kontent.ai) in Project Settings > API Keys. You can use the Primary or Secondary key.'
         },
         {
             label: 'Secure Access Key',

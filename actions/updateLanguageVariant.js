@@ -42,7 +42,7 @@ const updateLanguageVariant = {
         hidden: false,
         important: true,
         description: "Updates a language variant using Kontent Management API, or creates it if it doesn't exist.",
-        label: "Update language variant"
+        label: "Update Language Variant"
     },
     key: "update_variant",
     operation: {

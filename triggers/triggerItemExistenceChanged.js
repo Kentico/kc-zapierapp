@@ -16,7 +16,7 @@ const unsubscribeHook = require('../utils/unsubscribeHook');
 const getLanguage = require('../utils/languages/getLanguage');
 const getLanguageByCodename = require('../utils/languages/getLanguageByCodename');
 const makeHookItemOutput = require('./makeHookItemOutput');
-const hookLabel = 'Variant created, deleted or restored';
+const hookLabel = 'Variant Created, Deleted or Restored';
 const NUM_SAMPLE_ITEMS = 5;
 const events = {
     create: 'Create',
