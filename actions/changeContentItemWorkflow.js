@@ -11,15 +11,16 @@ function isFirstWorkflowStep(stepId, workflowSteps) {
 }
 
 function isPublishedWorkflowStep(stepId, workflowSteps) {
-    const lastStep = workflowSteps[workflowSteps.length - 1];
-
-    return lastStep && (lastStep.id === stepId) && (lastStep.name === "Published");
-}
-
-function isScheduledWorkflowStep(workflowStepId, workflowSteps) {
     const nextToLastStep = workflowSteps[workflowSteps.length - 2];
 
-    return nextToLastStep && (nextToLastStep.id === workflowStepId) && (nextToLastStep.name === "Scheduled");
+    return nextToLastStep && (nextToLastStep.id === stepId) && (nextToLastStep.name === "Published");
+}
+
+//TODO
+function isScheduledWorkflowStep(workflowStepId, workflowSteps) {
+    const stepBeforePublish = workflowSteps[workflowSteps.length - 3];
+
+    return stepBeforePublish && (stepBeforePublish.id === workflowStepId) && (stepBeforePublish.name === "Scheduled");
 }
 
 async function execute(z, bundle) {

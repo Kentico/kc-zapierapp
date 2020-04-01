@@ -42,9 +42,9 @@ async function execute(z, bundle) {
 }
 
 function isPublishedWorkflowStep(stepId, workflowSteps) {
-    const lastStep = workflowSteps[workflowSteps.length - 1];
+    const nextToLastStep = workflowSteps[workflowSteps.length - 2];
 
-    return lastStep && (lastStep.id === stepId) && (lastStep.name === "Published");
+    return nextToLastStep && (nextToLastStep.id === stepId) && (nextToLastStep.name === "Published");
 }
 
 async function createNewVersion(z, bundle, itemId, languageId) {
