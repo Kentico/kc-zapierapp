@@ -10,6 +10,10 @@ async function getItemElementFields(z, bundle, contentTypeId) {
             required: !!element.is_required
         };
 
+        if(element.type === 'modular_content') {
+            base.helpText += ' The value of this field should be a comma-separated list of content item IDs, or a single item ID on each line.';
+        }
+
         return Object.assign(base, extra);
     }
 

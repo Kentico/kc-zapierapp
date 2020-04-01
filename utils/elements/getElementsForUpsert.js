@@ -16,9 +16,10 @@ function getElementValue(value, element) {
         case 'url_slug':
             return value;
 
+        case 'modular_content':
+            //TODO allow codenames and external IDs for modular content
         case 'multiple_choice':
         case 'asset':
-        case 'modular_content':
         case 'taxonomy':
             return value && value.map(item => ({ id: item }));
 
