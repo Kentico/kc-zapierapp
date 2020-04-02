@@ -5,8 +5,8 @@ const getItemResult = require('./getItemResult');
 const getContentItem = require('./getContentItem');
 const findItemByIdentifier = require('./findItemByIdentifier');
 
-async function findContentItemByIdentifier(z, bundle, languageId, contentTypeId, searchField, searchValue) {
-    const item = await findItemByIdentifier(z, bundle, contentTypeId, searchField, searchValue);
+async function findContentItemByIdentifier(z, bundle, languageId, searchField, searchValue) {
+    const item = await findItemByIdentifier(z, bundle, null, searchField, searchValue);
     if (!item) {
         // Cannot search
         return null;
@@ -80,16 +80,14 @@ async function findContentItemByElement(z, bundle, languageId, contentTypeId, se
     return [contentItem];
 }
 
-async function findContentItem(z, bundle, languageId, contentTypeId, searchField, searchPattern, searchValue) {
-    const foundByCmApi = await findContentItemByIdentifier(z, bundle, languageId, contentTypeId, searchField, searchValue);
+async function findContentItem(z, bundle, languageId, searchField, searchPattern, searchValue) {
+    const foundByCmApi = await findContentItemByIdentifier(z, bundle, languageId, searchField, searchValue);
     if (foundByCmApi) {
         // Could search by identifier
         return foundByCmApi;
     }
-
-    // Cannot search by identifier
-    const foundByElement = findContentItemByElement(z, bundle, languageId, contentTypeId, searchField, searchPattern, searchValue);
-    return foundByElement;
+    
+    return null;
 }
 
 module.exports = findContentItem;

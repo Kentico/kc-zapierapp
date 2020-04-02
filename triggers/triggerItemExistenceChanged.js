@@ -1,23 +1,13 @@
-const getAdditionalItemOutputFields = require('../fields/output/getAdditionalItemOutputFields');
-const contentItemSample = require('../fields/samples/contentItemSample');
-const contentItemOutputFields = require('../fields/output/contentItemOutputFields');
-const getContentTypeField = require('../fields/getContentTypeField');
-const codeNameField = require('../fields/codeNameField');
 const getLanguageField = require('../fields/getLanguageField');
 const getSampleItemExistencePayload = require('../fields/samples/getSampleItemExistencePayload');
-const getContentItem = require('../utils/items/get/getContentItem');
-const getItemResult = require('../utils/items/get/getItemResult');
-const getAllItems = require('../utils/items/get/getAllItems');
-const getItemVariant = require('../utils/items/get/getItemVariant');
+const getTriggerSampleOutput = require('../fields/samples/getTriggerSampleOutput');
+const getContentTypeFieldForSamples = require('../fields/getContentTypeFieldForSamples');
 const handleErrors = require('../utils/handleErrors');
 const getSecret = require('../utils/getSecret');
 const hasValidSignature = require('../utils/hasValidSignature');
 const unsubscribeHook = require('../utils/unsubscribeHook');
-const getLanguage = require('../utils/languages/getLanguage');
-const getLanguageByCodename = require('../utils/languages/getLanguageByCodename');
 const makeHookItemOutput = require('./makeHookItemOutput');
 const hookLabel = 'Variant Created, Deleted or Restored';
-const NUM_SAMPLE_ITEMS = 5;
 const events = {
     create: 'Create',
     archive: 'Delete',
@@ -80,75 +70,15 @@ async function parsePayload(z, bundle) {
         throw new z.errors.HaltedError('Skipped, language not matched.');
     }
 
-    const targetCodename = bundle.inputData.targetCodename;
-    if (targetCodename && (item.codename !== targetCodename)) {
-        throw new z.errors.HaltedError('Skipped, codename not matched.');
-    }
+    const payloadFunc = () => { return bundle.cleanedRequest; };
 
     //If responding to an 'archive' operation, variant isn't available anymore
     if(bundle.cleanedRequest.message.operation === 'archive') {
-        return await makeHookItemOutput(z, bundle, null, () => { return bundle.cleanedRequest; });
+        return await makeHookItemOutput(z, bundle, null, payloadFunc);
     }
     else {
-        const language = await getLanguageByCodename(z, bundle, item.language);
-        const resultItem = await getContentItem(z, bundle, item.item.id, item.language.id);
-        if (!resultItem) {
-            throw new z.errors.HaltedError('Skipped, item not found.');
-        }
-
-        const contentTypeId = bundle.inputData.contentTypeId;
-        if (contentTypeId && (resultItem.system.contentTypeId !== contentTypeId)) {
-            throw new z.errors.HaltedError('Skipped, content type not matched.');
-        }
-
-        return await makeHookItemOutput(z, bundle, [resultItem], () => { return bundle.cleanedRequest; });
+        return await makeHookItemOutput(z, bundle, [item], payloadFunc);
     }
-}
-
-async function getFirstNItems(z, bundle, num) {
-    let items = await getAllItems(z, bundle);
-    if(!items) return null;
-
-    //try to load item with codename
-    const targetCodename = bundle.inputData.targetCodename;
-    if(targetCodename) {
-        const nameMatches = items.filter(i => i.codename === targetCodename);
-        if(nameMatches.length > 0) {
-            return [nameMatches[0]];
-        }
-    }
-
-    //try to load item of the given type
-    const contentTypeId = bundle.inputData.contentTypeId;
-    if(contentTypeId) {
-        const typeMatches = items.filter(i => i.type.id === contentTypeId);
-        if(typeMatches.length > 0) {
-            return typeMatches.slice(0, num);
-        }
-    }
-    
-    return items.slice(0, num);
-}
-
-async function getSampleItems(z, bundle) {
-    let items = await getFirstNItems(z, bundle, NUM_SAMPLE_ITEMS);
-    if (!items) {
-        return [];
-    }
-
-    const promises = items.map(async item => {
-        const variant = await getItemVariant(z, bundle, item.id);
-        if(variant) {
-            const sampleItem = await getItemResult(z, bundle, item, variant);
-            return sampleItem;
-        }
-    });
-
-    let resultItems = await Promise.all(promises);
-    //remove content items that aren't translated
-    resultItems = resultItems.filter(item => item != null);
-    
-    return await makeHookItemOutput(z, bundle, resultItems, getSampleItemExistencePayload);
 }
 
 module.exports = {
@@ -173,14 +103,10 @@ module.exports = {
                 list: true,
                 choices: events
             },
-            codeNameField,
             getLanguageField({
                 helpText: 'Fires only for variants of the given languages. Leave blank for all languages.',
             }),
-            getContentTypeField({
-                helpText: 'Fires only for variants of the given content type. Leave blank for all content types.',
-            }),
-            getAdditionalItemOutputFields
+            getContentTypeFieldForSamples
         ],
         type: 'hook',
 
@@ -188,9 +114,6 @@ module.exports = {
         performUnsubscribe: unsubscribeHook,
 
         perform: parsePayload,
-        performList: getSampleItems,
-
-        sample: contentItemSample,
-        outputFields: contentItemOutputFields,
+        performList: (z, bundle) => { return getTriggerSampleOutput(z, bundle, getSampleItemExistencePayload) },
     }
 };

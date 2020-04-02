@@ -1,6 +1,5 @@
 const taxonomyGroupSample = require('../fields/samples/taxonomyGroupSample');
 const getSampleTaxonomyPayload = require('../fields/samples/getSampleTaxonomyPayload');
-const getAdditionalTaxonomyOutputFields = require('../fields/output/getAdditionalTaxonomyOutputFields');
 const handleErrors = require('../utils/handleErrors');
 const getSecret = require('../utils/getSecret');
 const hasValidSignature = require('../utils/hasValidSignature');
@@ -76,7 +75,6 @@ async function parsePayload(z, bundle) {
 
     //If responding to an 'archive' operation, taxonomy group isn't available anymore
     if(hookPayload.message.operation === 'archive') {
-        z.console.log('responding to archive event');
         return makeHookTaxonomyOutput(z, bundle, null, payloadFunc);
     }
     else {
@@ -152,13 +150,6 @@ module.exports = {
                 key: 'targetCodename',
                 type: 'string'
             },
-            {
-                label: 'Note',
-                key: 'searchInfo',
-                helpText: 'For Delete events, only the webhook payload will be available and will always be output.',
-                type: 'copy',
-            },
-            getAdditionalTaxonomyOutputFields
         ],
         type: 'hook',
 
