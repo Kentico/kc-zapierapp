@@ -27,16 +27,19 @@ Using the Kentico Kontent integration, you only need to configure the Zap in Zap
 1. Create a new Zap: https://zapier.com/app/zaps.
 2. In the _Choose App & Event_ field, search for `Kentico Kontent` then choose your trigger.
 
-![step 1](./images/step1.png)
+![step 1](./images/chooseapp.png)
 
 3. Click __Continue__ then __Sign in to Kentico Kontent__ on the next screen. You can find the credentials on the _API Keys_ page in Kontent.
 
 ![sign in](./images/authenticate.png)
 
-4. Configure the conditions for your trigger. Most triggers have multiple events that can be "listened" to, and you can select multiple options or leave the field empty for all events.  
-  Triggers will output the language variant or taxonomy group which fired the webhook as its output. However, each trigger also contains an __Addtional Step Output__ field where you can choose to output more data from the step, if you need it in later steps. For example, choosing _Raw JSON of variant_ will return the Delivery response for an item allowing you to access the `modular_content` later on.
+4. Configure the conditions for your trigger. Most triggers have multiple events that can be "listened" to, and you can select multiple options or leave the field empty for all events.
 
 5. Click __Test and Review__ to get a sample item from your Kontent project. This allows you to configure later steps using fields from your content items.
+
+    - Most triggers have a __Content Type For Samples__ field which allows you to select a content type. If you do, the sample data for the trigger will be of that type. This has no effect on the Zap itself.
+
+The output of the triggers will be the payload sent from Kontent, which you can read more about [here](https://docs.kontent.ai/reference/webhooks-reference). To find additional data about the item which triggered the webhook, you can use the __Find Content Item__ action.
 
 ## Example - Google calendar
 
@@ -56,75 +59,65 @@ The event's `attendee_list` is a linked item element which can only contain item
 
 ![contact type](./images/contact.png)
 
+Create some Contact content items and publish them, then create an Event and leave it in Draft step.
+
 ### Creating the Zap
 
-To reduce the amount of manual work that needs to be done, we want Zapier to create a calendar item and send emails whenever an Event is published in Kontent. The final product will look like this:
-
-![all steps](./images/steps.png)
+To reduce the amount of manual work that needs to be done, we want Zapier to create a calendar item and send emails whenever an Event is published in Kontent. 
 
 #### Step 1
 
-Of course, we start with the trigger. For the __Trigger event__ choose _Variant published status change_. In the configuration of the step, set the following:
+Of course, we start with the trigger. For the __Trigger event__ choose _Variant Published Status Changed_. In the configuration of the step, set the following:
 
-![step 1 configuration](./images/step1config.png)
+![variant published step](./images/variantpublished.png)
 
 Under __Webhook Name__ you can enter any value you'd like such as "Google Calendar Event Creation" which will appear in Kontent's Webhooks page, or you can leave it empty to use the default "Variant published status changed (Zapier)."
 
-We need to select _Raw JSON of variant_ in the __Additional Step Output__ field so that we can parse the attendees modular content in the next step.
-
 #### Step 2
 
-Next we can use a __Code by Zapier__ step to set some variables to use in later steps. If you're not familiar with the basics of code steps, please read [Zapier's documentation](https://zapier.com/apps/code/help). In the __Input data__ field we can load some values from the trigger to use in javascript:
+The trigger's output will look something like this:
 
-- __json__: The raw JSON of the item, used to load the modular content (attendees).
-- __attendees__: The value of the `attendee_list` element, which contains the codenames of the linked items.
-- __notify__: the value of the `notify_attendees` element, which will contain a value only if the box was checked.
-
-We need to know a little javascript here. Use JSON to parse the `modular_content` object, then use `Object.values()` to create an array. Filter the array so that only contacts from the `attendees` variable remain, then `map` the email addresses to a new array:
-
-```js
-let modular = JSON.parse(inputData.json).modular_content;
-modular = Object.values(modular);
-modular = modular.filter(m => inputData.attendees.includes(m.system.id));
-const emails = modular.map(m => m.elements.email.value);
+```
+[{
+"Webhook payload": {
+    "data": {
+        "items": [{
+                "id": "1436e2dc-e53f-47f0-8721-ab65eb8080ba",
+                "codename": "game_night",
+                "language": "en-US",
+                "type": "event"
+            }
+        ]
+    },
+    "message": {
+        "id": "e2f99f74-4111-4033-8eff-54073fbd4e32",
+        "project_id": ":censored:36:5ab3c81ad6:",
+        "type": "content_item_variant",
+        "operation": "publish",
+        "api_name": "delivery_production",
+        "created_timestamp": "2020-04-02T17:33:59.141Z"
+    }
+}
+}]
 ```
 
-Finally, we'll check whether `notify` has any value and save that for the email step of our Zap. Use the `output` variable to save our 2 objects:
+The trigger will fire when any variant is published, but we only want to continue if it is an Event item. We can use the `type` value from the trigger and a __Filter by Zapier__ action to stop the Zap if the type is not "event:"
 
-```js
-const notify = inputData.notify !== undefined;
-output = [{emails: emails, notify: notify}];
-```
-
-The finished step should look like this:
-
-![step 2 configuration](./images/step2config.png)
+![filter step](./images/filter.png)
 
 #### Step 3
 
-Our next step is to create the Google Calendar event. In __Choose App & Event__ select _Google Calendar_ and _Create Detailed Event_. On the next screen, you'll need to authorize a Google Account which has access to the calendar you wish to modify.
+To get information about the event, we need to add a __Find Content Item__ action. In this step, you can search for an item by ID, external ID or codename. Since the trigger output contains the item ID, you can load that value in the __Search value__ field:
 
-On the __Customize Detailed Event__ screen, select your calendar then use data from step 1 to populate these fields:
-
-![step 3 configuration](./images/step3config.png)
-
-In the _Attendees_ field we're loading the comma-separated email addresses we parsed from `modular_content` in step 2. From the screenshot it seems as if email addresses need to be added individually to separate lines, but the comma-separated value also works fine.
+![content item search](./images/itemsearch.png)
 
 #### Step 4
 
-The above step will create the calendar event, but doesn't email attendees about its creation. We'll make a separate step for that, but we only want to email the attendees if the event had the __Notify attendees__ box checked. We converted that value to a `boolean` in step 2, so now we can use a __Filter by Zapier__ step.
+Our next step is to create the Google Calendar event. In __Choose App & Event__ select _Google Calendar_ and _Create Detailed Event_. On the next screen, you'll need to authorize a Google Account which has access to the calendar you wish to modify.
 
-In the _Only continue if..._ field, select the `notify` variable we output in step 2, and the condition _(Boolean) Is true_.
+On the __Customize Detailed Event__ screen, select your calendar then use data from step 3 to populate these fields:
 
-![step 4 configuration](./images/step4config.png)
-
-#### Step 5
-
-For the final step, choose the __Gmail__ App and the __Send email__ action. Authorize the account that will send the emails, then populate the email with values from step 1. Again, we can use the comma-separated list of email addresses from step 2 in the __To__ field of the email:
-
-![step 5 configuration](./images/step5config.png)
-
-#### Turning on the Zap
+![calendar details](./images/calendardetails.png)
 
 We're pretty much done- turn on the Zap to create the webhook in Kontent. If the On/Off switch is greyed-out in Zapier, you most likely need to test one of the steps (or, choose __Skip test__). All steps should have a green check mark in the top-left corner.
 
