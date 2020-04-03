@@ -42,7 +42,7 @@ async function execute(z, bundle) {
 
     const item = await createItem(z, bundle, name, contentTypeId, externalId);
     const variant = await upsertVariant(z, bundle, item.id, languageId, contentTypeId);
-    const result = getItemResult(z, bundle, item, variant);
+    const result = getItemResult(z, bundle, item, variant, false);
 
     return result;
 }

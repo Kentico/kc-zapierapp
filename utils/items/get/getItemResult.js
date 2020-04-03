@@ -3,7 +3,7 @@ const getLanguage = require('../../languages/getLanguage');
 const getVariant = require('./getVariant');
 const findItemByIdentifier = require('./findItemByIdentifier');
 
-async function findContentItemByIdentifier(z, bundle, languageId, searchField, searchValue) {
+async function findContentItemByIdentifier(z, bundle, languageId, searchField, searchValue, doModular) {
     const item = await findItemByIdentifier(z, bundle, null, searchField, searchValue);
     if (!item) {
         // Cannot search
@@ -24,7 +24,7 @@ async function findContentItemByIdentifier(z, bundle, languageId, searchField, s
     }
 
     // Found
-    return await getItemResult(z, bundle, item[0], variant);
+    return await getItemResult(z, bundle, item[0], variant, doModular);
 }
 
 function getElementValue(element, typeElement) {
@@ -71,38 +71,34 @@ function getElements(z, bundle, variant, contentType) {
     return result;
 }
 
-async function getModularContent(z, bundle, variant, contentType) {
-    const elements = variant.elements;
+async function getModularContent(z, bundle, variant, contentType, doModular) {
     const modularContent = [];
-
-    for (var i = 0; i < elements.length; i++) {
-        const element = elements[i];
-        if (element.type === 'guidelines') {
-            continue;
-        }
-
-        const elementId = element.element.id;
-
-        const typeElement = contentType.elements.filter(el => el.id === elementId)[0];
-        if (typeElement) {
-            if(typeElement.type === 'modular_content') {
-                //request all items and add to array
-                for await (const item of element.value) {
-                    const result = await findContentItemByIdentifier(z, bundle, variant.language.id, 'id', item.id);
-                    modularContent.push(result);
-                }
-            }
+    const modularElements = contentType.elements.filter(el => el.type === 'modular_content');
+ 
+    for(const modularElement of modularElements) {
+        const variantElement = variant.elements.filter(el => el.element.id === modularElement.id)[0];
+        if (variantElement) {
+            //request all items and add to array
+            for await (const item of variantElement.value) {
+                const result = await findContentItemByIdentifier(z, bundle, variant.language.id, 'id', item.id, doModular);
+                modularContent.push(result);
+            }     
         }
     }
 
     return modularContent;
 }
 
-async function getItemResult(z, bundle, item, variant) {
+async function getItemResult(z, bundle, item, variant, doModular = true) {
     const contentType = await getContentType(z, bundle, item.type.id);
     const language = await getLanguage(z, bundle, variant.language.id);
     const elements = await getElements(z, bundle, variant, contentType);
-    const modular = await getModularContent(z, bundle, variant, contentType);
+    let modular = [];
+
+    //get modular content and set doModular to false to prevent too much depth
+    if(doModular) {
+        modular = await getModularContent(z, bundle, variant, contentType, false);
+    }
 
     const projectId = bundle.authData.projectId;
     const fullId = `${item.id}/${variant.language.id}`;

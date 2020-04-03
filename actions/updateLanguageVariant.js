@@ -74,7 +74,7 @@ async function tryUpdate(z, bundle, variant, item) {
     }
 
     result = await upsertVariant(z, bundle, item.id, variant.language.id, item.type.id);
-    return await getItemResult(z, bundle, item, result);
+    return await getItemResult(z, bundle, item, result, false);
 }
 
 const updateLanguageVariant = {
