@@ -109,7 +109,7 @@ To get information about the event, we need to add a __Find Content Item__ actio
 
 #### Step 4
 
-To send emails to the event attendees, we will need to get the contacts stored in the `attendees_list` element. The value of this element will be an array of content item IDs which correspond with the items in step 3's `modular_content` output. So, we can use a __Code by Zapier__ step to get the email addresses of the attendees and some other values needed later.
+To send emails to the event attendees, we will need to get the contacts stored in the `attendees_list` element. The value of this element will be an array of content item IDs which correspond with the items in step 3's `modular_content` output. So, we can use a __Code by Zapier__ step to get the email addresses of the attendees for the next step.
 
 If you're not familiar with the basics of code steps, please read [Zapier's documentation](https://zapier.com/apps/code/help). In the __Input data__ field we can load some values from the trigger to use in javascript:
 
