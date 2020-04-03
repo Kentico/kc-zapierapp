@@ -1,5 +1,31 @@
 const getContentType = require('../../types/getContentType');
 const getLanguage = require('../../languages/getLanguage');
+const getVariant = require('./getVariant');
+const findItemByIdentifier = require('./findItemByIdentifier');
+
+async function findContentItemByIdentifier(z, bundle, languageId, searchField, searchValue) {
+    const item = await findItemByIdentifier(z, bundle, null, searchField, searchValue);
+    if (!item) {
+        // Cannot search
+        return null;
+    }
+
+    if (!item.length) {
+        // Not found
+        return [];
+    }
+
+    const itemId = item[0].id;
+
+    const variant = await getVariant(z, bundle, itemId, languageId);
+    if (!variant) {
+        // Not found
+        return [];
+    }
+
+    // Found
+    return await getItemResult(z, bundle, item[0], variant);
+}
 
 function getElementValue(element, typeElement) {
     const value = element.value;
@@ -12,9 +38,9 @@ function getElementValue(element, typeElement) {
         case 'url_slug':
             return value;
 
+        case 'modular_content':
         case 'multiple_choice':
         case 'asset':
-        case 'modular_content':
         case 'taxonomy':
             return value && value.map(item => item.id);
 
@@ -23,7 +49,8 @@ function getElementValue(element, typeElement) {
     }
 }
 
-function getElements(elements, contentType) {
+function getElements(z, bundle, variant, contentType) {
+    const elements = variant.elements;
     const result = {};
 
     for (var i = 0; i < elements.length; i++) {
@@ -44,9 +71,38 @@ function getElements(elements, contentType) {
     return result;
 }
 
+async function getModularContent(z, bundle, variant, contentType) {
+    const elements = variant.elements;
+    const modularContent = [];
+
+    for (var i = 0; i < elements.length; i++) {
+        const element = elements[i];
+        if (element.type === 'guidelines') {
+            continue;
+        }
+
+        const elementId = element.element.id;
+
+        const typeElement = contentType.elements.filter(el => el.id === elementId)[0];
+        if (typeElement) {
+            if(typeElement.type === 'modular_content') {
+                //request all items and add to array
+                for await (const item of element.value) {
+                    const result = await findContentItemByIdentifier(z, bundle, variant.language.id, 'id', item.id);
+                    modularContent.push(result);
+                }
+            }
+        }
+    }
+
+    return modularContent;
+}
+
 async function getItemResult(z, bundle, item, variant) {
     const contentType = await getContentType(z, bundle, item.type.id);
-    const language = await getLanguage(z, bundle, variant.language.id)
+    const language = await getLanguage(z, bundle, variant.language.id);
+    const elements = await getElements(z, bundle, variant, contentType);
+    const modular = await getModularContent(z, bundle, variant, contentType);
 
     const projectId = bundle.authData.projectId;
     const fullId = `${item.id}/${variant.language.id}`;
@@ -66,7 +122,8 @@ async function getItemResult(z, bundle, item, variant) {
             contentTypeId: item.type.id,
             languageId: variant.language.id,
         },
-        elements: getElements(variant.elements, contentType),
+        elements: elements,
+        modular_content: z.JSON.stringify(modular)
     };
 
     return contentItem;

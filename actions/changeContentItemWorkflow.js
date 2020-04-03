@@ -16,7 +16,6 @@ function isPublishedWorkflowStep(stepId, workflowSteps) {
     return nextToLastStep && (nextToLastStep.id === stepId) && (nextToLastStep.name === "Published");
 }
 
-//TODO
 function isScheduledWorkflowStep(workflowStepId, workflowSteps) {
     const stepBeforePublish = workflowSteps[workflowSteps.length - 3];
 

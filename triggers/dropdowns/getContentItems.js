@@ -24,7 +24,6 @@ async function execute(z, bundle) {
 
     const results = z.JSON.parse(response.content).items;
 
-    // TODO - Standardize model
     const resultsWithId = results.map(
         (item) => Object.assign(
             item,

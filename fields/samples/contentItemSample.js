@@ -14,7 +14,8 @@ const contentItemSample = {
         workflowStepId: '88ac5e6e-1c5c-4638-96e1-0d61221ad5bf',
         languageId: '00000000-0000-0000-0000-000000000000',
         externalId: '19028531',
-    }
+    },
+    modular_content: []
 };
 
 module.exports = contentItemSample;
