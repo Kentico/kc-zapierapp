@@ -47,15 +47,11 @@ Let's say your company manages events for a client. At this point, you've been u
 
 ### Content types in Kontent
 
-To start, we should have an __Event__ content type with 2 content groups- one for the event details:
+To start, we should have an __Event__ content type with fields for basic event information, and a __Linked items__ element which can only contain items from your __Contact__ content type:
 
 ![event details](./images/eventdetails.png)
 
-and one for the attendees, a notification option, and a note:
-
-![event attendees](./images/eventattendees.png)
-
-The event's `attendee_list` is a linked item element which can only contain items from your __Contact__ content type:
+The __Contact__ content type can contain whatever information you'd like, but should at least have an `email` element:
 
 ![contact type](./images/contact.png)
 
@@ -113,11 +109,40 @@ To get information about the event, we need to add a __Find Content Item__ actio
 
 #### Step 4
 
-Our next step is to create the Google Calendar event. In __Choose App & Event__ select _Google Calendar_ and _Create Detailed Event_. On the next screen, you'll need to authorize a Google Account which has access to the calendar you wish to modify.
+To send emails to the event attendees, we will need to get the contacts stored in the `attendees_list` element. The value of this element will be an array of content item IDs which correspond with the items in step 3's `modular_content` output. So, we can use a __Code by Zapier__ step to get the email addresses of the attendees and some other values needed later.
+
+If you're not familiar with the basics of code steps, please read [Zapier's documentation](https://zapier.com/apps/code/help). In the __Input data__ field we can load some values from the trigger to use in javascript:
+
+- __json__: The raw JSON of the modular content from step 3.
+- __attendees__: The value of the `attendee_list` element, which contains the IDs of the linked items.
+
+![input data](./images/inputdata.png)
+
+In the code of the step, use JSON to parse the `json` variable, then use `Object.values()` to create an array. Filter the array so that only contacts from the `attendees` variable remain, then `map` the email addresses to a new array. Then, output the emails:
+
+```js
+let modular = JSON.parse(inputData.json);
+modular = Object.values(modular);
+modular = modular.filter(m => inputData.attendees.includes(m.system.id));
+
+const emails = modular.map(m => m.elements.email);
+
+output = [{emails: emails}];
+```
+
+#### Step 5
+
+Now we can create the Google Calendar event. In __Choose App & Event__ select _Google Calendar_ and _Create Detailed Event_. On the next screen, you'll need to authorize a Google Account which has access to the calendar you wish to modify.
 
 On the __Customize Detailed Event__ screen, select your calendar then use data from step 3 to populate these fields:
 
 ![calendar details](./images/calendardetails.png)
+
+In the event's __Attendees__ field you can load the list of emails from step 4. Google will automatically email the attendees when the event is created.
+
+![attendees](./images/attendees.png)
+
+#### Testing
 
 We're pretty much done- turn on the Zap to create the webhook in Kontent. If the On/Off switch is greyed-out in Zapier, you most likely need to test one of the steps (or, choose __Skip test__). All steps should have a green check mark in the top-left corner.
 
