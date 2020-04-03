@@ -45,6 +45,10 @@ The output of the triggers will be the payload sent from Kontent, which you can 
 
 Let's say your company manages events for a client. At this point, you've been using Kentico Kontent to store information about the events, but you've been manually creating the event in Google Calendar and emailing the attendees. We can now use Zapier to do this for us whenever a new event is published.
 
+The final Zap will look something like this:
+
+![finished zap](./images/steps.png)
+
 ### Content types in Kontent
 
 To start, we should have an __Event__ content type with fields for basic event information, and a __Linked items__ element which can only contain items from your __Contact__ content type:
