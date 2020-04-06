@@ -12,14 +12,13 @@ You can search the item by a particular field value.`,
 };
 
 async function getSearchField(z, bundle, contentTypeId) {
-    //const elements = await getContentTypeElements(z, bundle, contentTypeId);
+    const elements = await getContentTypeElements(z, bundle, contentTypeId);
     const choices = [
         { value: 'id', sample: 'id', label: 'Item ID' },
         { value: 'externalId', sample: 'externalId', label: 'External ID' },
         { value: `${SystemPrefix}codename`, sample: `${SystemPrefix}codename`, label: 'Code name' }
     ];
     
-    /*
     for (var i = 0; i < elements.length; i++) {
         const element = elements[i];
         if(element.type === 'guidelines') continue;
@@ -40,7 +39,7 @@ async function getSearchField(z, bundle, contentTypeId) {
                     label: element.name || element.codename
                 });
         }
-    }*/
+    }
 
     return [{
         label: 'Search field',

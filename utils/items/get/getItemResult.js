@@ -5,14 +5,9 @@ const findItemByIdentifier = require('./findItemByIdentifier');
 
 async function findContentItemByIdentifier(z, bundle, languageId, searchField, searchValue, doModular) {
     const item = await findItemByIdentifier(z, bundle, null, searchField, searchValue);
-    if (!item) {
-        // Cannot search
-        return null;
-    }
-
-    if (!item.length) {
+    if (!item || !item.length) {
         // Not found
-        return [];
+        return null;
     }
 
     const itemId = item[0].id;
@@ -20,7 +15,7 @@ async function findContentItemByIdentifier(z, bundle, languageId, searchField, s
     const variant = await getVariant(z, bundle, itemId, languageId);
     if (!variant) {
         // Not found
-        return [];
+        return null;
     }
 
     // Found
@@ -75,13 +70,13 @@ async function getModularContent(z, bundle, variant, contentType, doModular) {
     const modularContent = [];
     const modularElements = contentType.elements.filter(el => el.type === 'modular_content');
  
-    for(const modularElement of modularElements) {
+    for await(const modularElement of modularElements) {
         const variantElement = variant.elements.filter(el => el.element.id === modularElement.id)[0];
         if (variantElement) {
             //request all items and add to array
             for await (const item of variantElement.value) {
                 const result = await findContentItemByIdentifier(z, bundle, variant.language.id, 'id', item.id, doModular);
-                modularContent.push(result);
+                if(result) modularContent.push(result);
             }     
         }
     }

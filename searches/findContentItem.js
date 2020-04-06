@@ -4,15 +4,17 @@ const getElementOutputFields = require('../fields/output/getElementOutputFields'
 const standardizedSystemOutputFields = require('../fields/output/standardizedSystemOutputFields');
 const contentItemSample = require('../fields/samples/contentItemSample');
 const findContentItem = require('../utils/items/get/findContentItem');
+const getContentTypeField = require('../fields/getContentTypeField');
 
 async function execute(z, bundle) {
     const languageId = bundle.inputData.languageId;
+    const contentTypeId = bundle.inputData.contentTypeId;
 
     const searchField = bundle.inputData.searchField;
     const searchPattern = bundle.inputData.searchPattern;
     const searchValue = bundle.inputData.searchValue;
-
-    const found = await findContentItem(z, bundle, languageId, searchField, searchPattern, searchValue);
+    
+    const found = await findContentItem(z, bundle, languageId, contentTypeId, searchField, searchPattern, searchValue);
 
     return found;
 }
@@ -30,6 +32,7 @@ module.exports = {
         perform: execute,
         inputFields: [
             getLanguageField({ required: true }),
+            getContentTypeField({ required: true, altersDynamicFields: true }),
             ...itemSearchFields,
         ],
         sample: contentItemSample,
