@@ -15,7 +15,7 @@ async function getItemElementFields(z, bundle, contentTypeId) {
            element.type === 'multiple_choice' ||
            element.type === 'asset' ||
            element.type === 'taxonomy') {
-            base.helpText += ' The value of this field should be a comma-separated list of content item IDs, or a single item ID on each line.';
+            base.helpText += ' The value of this field should be a comma-separated list of content item IDs or [external IDs](https://docs.kontent.ai/reference/management-api-v2#section/External-IDs-for-imported-content), or a single value on each line.';
         }
 
         return Object.assign(base, extra);

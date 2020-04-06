@@ -17,7 +17,12 @@ function getElementValue(value, element) {
             return value;
 
         case 'modular_content':
-            //TODO allow codenames and external IDs for modular content
+            return value && value.map(item => {
+                //try to determine if it's an ID or external ID
+                if(item.length == 36 && (item.match(/-/g)||[]).length === 4) return { id: item };
+                else return { external_id: item };
+            });
+
         case 'multiple_choice':
         case 'asset':
         case 'taxonomy':
