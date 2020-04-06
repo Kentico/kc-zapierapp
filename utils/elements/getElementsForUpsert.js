@@ -26,7 +26,11 @@ function getElementValue(value, element) {
         case 'multiple_choice':
         case 'asset':
         case 'taxonomy':
-            return value && value.map(item => ({ id: item }));
+            return value && value.map(item => {
+                //try to determine if it's an ID or codename
+                if(item.length == 36 && (item.match(/-/g)||[]).length === 4) return { id: item };
+                else return { codename: item };
+            });
 
         case 'guidelines':
         default:

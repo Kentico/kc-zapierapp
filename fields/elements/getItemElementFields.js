@@ -6,16 +6,21 @@ async function getItemElementFields(z, bundle, contentTypeId) {
     function getField(element, extra) {
         const base = {
             key: `elements__${element.codename}`,
-            label: element.name,
-            helpText: element.guidelines,
+            label: element.name || element.codename,
+            helpText: element.guidelines || '',
             required: !!element.is_required
         };
 
-        if(element.type === 'modular_content' ||
-           element.type === 'multiple_choice' ||
-           element.type === 'asset' ||
-           element.type === 'taxonomy') {
-            base.helpText += ' The value of this field should be a comma-separated list of content item IDs or [external IDs](https://docs.kontent.ai/reference/management-api-v2#section/External-IDs-for-imported-content), or a single value on each line.';
+        //element-specific changes to helpText
+        switch (element.type) {
+            case 'modular_content':
+                base.helpText += ' The value of this field should be a comma-separated list of content item IDs or [external IDs](https://docs.kontent.ai/reference/management-api-v2#section/External-IDs-for-imported-content), or a single value on each line.';
+                break;
+            case 'multiple_choice':
+            case 'asset':
+            case 'taxonomy':
+                base.helpText += ' The value of this field should be a comma-separated list of IDs or codenames, or a single value on each line.';
+        
         }
 
         return Object.assign(base, extra);
