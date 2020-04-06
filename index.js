@@ -6,6 +6,7 @@ const triggerItemPublishChanged = require('./triggers/triggerItemPublishChanged'
 const triggerItemExistenceChanged = require('./triggers/triggerItemExistenceChanged');
 
 const getContentItems = require('./triggers/dropdowns/getContentItems');
+const getLinkedItems = require('./triggers/dropdowns/getLinkedItems');
 const getWorkflowSteps = require('./triggers/dropdowns/getWorkflowSteps');
 const getContentTypes = require('./triggers/dropdowns/getContentTypes');
 const getLanguages = require('./triggers/dropdowns/getLanguages');
@@ -43,6 +44,7 @@ const App = {
         [triggerItemExistenceChanged.key]: triggerItemExistenceChanged,
 
         // Lists for dropdowns
+        [getLinkedItems.key]: getLinkedItems,
         [getContentTypes.key]: getContentTypes,
         [getContentItems.key]: getContentItems,
         [getWorkflowSteps.key]: getWorkflowSteps,

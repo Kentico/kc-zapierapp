@@ -1,4 +1,5 @@
 const getContentTypeElements = require('./getContentTypeElements');
+const getLinkedItemField = require('../getLinkedItemField');
 
 async function getItemElementFields(z, bundle, contentTypeId) {
 
@@ -33,9 +34,11 @@ async function getItemElementFields(z, bundle, contentTypeId) {
             case 'date_time':
                 return getField(element, {type: 'datetime'});
 
+            case 'modular_content': 
+                return getLinkedItemField(getField(element));
+
             case 'multiple_choice':
             case 'asset':
-            case 'modular_content':
             case 'taxonomy':
                 return getField(element, {type: 'unicode', list: true});
 
