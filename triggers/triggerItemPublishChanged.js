@@ -1,5 +1,3 @@
-const contentItemSample = require('../fields/samples/contentItemSample');
-const contentItemOutputFields = require('../fields/output/contentItemOutputFields');
 const getLanguageField = require('../fields/getLanguageField');
 const getSampleItemPublishPayload = require('../fields/samples/getSampleItemPublishPayload');
 const getTriggerSampleOutput = require('../fields/samples/getTriggerSampleOutput');

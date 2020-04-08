@@ -1,5 +1,3 @@
-const contentItemSample = require('../fields/samples/contentItemSample');
-const contentItemOutputFields = require('../fields/output/contentItemOutputFields');
 const getWorkflowStepField = require('../fields/getWorkflowStepField');
 const getLanguageField = require('../fields/getLanguageField');
 const getSampleWorkflowPayload = require('../fields/samples/getSampleWorkflowPayload');
