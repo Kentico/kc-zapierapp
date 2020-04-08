@@ -1,6 +1,8 @@
+[![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
+
 # Zapier CLI Integration
 
-Source code for the Zapier integration with Kentico Kontent
+Source code for the Zapier integration with Kentico Kontent: https://zapier.com/apps/kentico-kontent/integrations.
 
 ## Integrations
 
