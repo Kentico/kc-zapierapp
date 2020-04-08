@@ -4,7 +4,7 @@ Source code for the Zapier integration with Kentico Kontent
 
 ## Integrations
 
-This integration contains 4 triggers, 4 actions, and 2 searches:
+This integration contains 4 triggers, 4 actions, and 4 searches:
 
 - __Triggers__
     - Variant workflow step change
@@ -19,6 +19,8 @@ This integration contains 4 triggers, 4 actions, and 2 searches:
 - __Searches__
     - Find content item
     - Find workflow step
+    - Find language
+    - Find asset
 
 ## Creating a trigger in Zapier
 

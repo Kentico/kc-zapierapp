@@ -1,4 +1,3 @@
-const handleErrors = require('../utils/handleErrors');
 const getWorkflowSteps = require('../utils/workflows/getWorkflowSteps');
 
 async function execute(z, bundle) {
@@ -20,7 +19,6 @@ async function execute(z, bundle) {
     }
 
     const stepName = bundle.inputData.stepName;
-
     const found = await findWorkflowStep(stepName);
 
     return found;
@@ -41,7 +39,7 @@ const findWorkflowStep = {
             {
                 label: 'Step name',
                 key: 'stepName',
-                helpText: 'Name of the workflow step, the search is case insensitive. If exact match is not found, searches as a substring.',
+                helpText: 'Name of the workflow step, the search is case insensitive. If an exact match is not found, searches as a substring.',
                 type: 'string',
                 required: true,
             }

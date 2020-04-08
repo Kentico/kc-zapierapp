@@ -13,6 +13,8 @@ const getLanguages = require('./triggers/dropdowns/getLanguages');
 
 const findContentItem = require('./searches/findContentItem');
 const findWorkflowStep = require('./searches/findWorkflowStep');
+const findLanguage = require('./searches/findLanguage');
+const findAsset = require('./searches/findAsset');
 
 const deleteLanguageVariant = require('./actions/deleteLanguageVariant');
 const createContentItem = require('./actions/createContentItem');
@@ -55,6 +57,8 @@ const App = {
     searches: {
         [findContentItem.key]: findContentItem,
         [findWorkflowStep.key]: findWorkflowStep,
+        [findLanguage.key]: findLanguage,
+        [findAsset.key]: findAsset,
     },
 
     // If you want your creates to show up, you better include it here!
