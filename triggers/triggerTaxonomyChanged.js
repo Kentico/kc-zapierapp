@@ -54,7 +54,7 @@ async function subscribeHook(z, bundle) {
 }
 
 async function parsePayload(z, bundle) {
-    if(!hasValidSignature(z, bundle)){
+    if (!hasValidSignature(z, bundle)) {
         throw new Error('Unable to verify webhook signature.');
     }
 
@@ -74,7 +74,7 @@ async function parsePayload(z, bundle) {
     const payloadFunc = () => { return bundle.cleanedRequest; };
 
     //If responding to an 'archive' operation, taxonomy group isn't available anymore
-    if(hookPayload.message.operation === 'archive') {
+    if (hookPayload.message.operation === 'archive') {
         return makeHookTaxonomyOutput(z, bundle, null, payloadFunc);
     }
     else {
@@ -96,7 +96,7 @@ async function getSampleItems(z, bundle) {
         }
     };
 
-    if(bundle.authData.secureApiKey) {
+    if (bundle.authData.secureApiKey) {
         options.headers['Authorization'] = `Bearer ${bundle.authData.secureApiKey}`;
     }
 
@@ -110,7 +110,7 @@ async function getSampleItems(z, bundle) {
         sampleGroups = [raw];
     }
     else {
-        if(raw.taxonomies && raw.taxonomies.length > 0) {
+        if (raw.taxonomies && raw.taxonomies.length > 0) {
             sampleGroups = raw.taxonomies.slice(0, NUM_SAMPLE_ITEMS);
         }
         else {
@@ -159,7 +159,33 @@ module.exports = {
         perform: parsePayload,
         performList: getSampleItems,
 
-        sample: taxonomyGroupSample,
+        sample: {
+            data: {
+                items: [
+                    {
+                        id: 'e113e464-bffb-4fbd-a29b-47991d003732',
+                        codename: 'my_article',
+                        language: 'en-US',
+                        type: 'article'
+                    }
+                ],
+                taxonomies: [
+                    {
+                        id: '13145328-b946-4e47-9c9d-6f40c7aaeaef',
+                        codename: 'article_tags'
+                    }
+                ]
+            },
+            message: {
+                id: 'e2f99f74-4111-4033-8eff-54073fbd4e32',
+                project_id: '11a3492b-cd32-0054-51d2-8234ec4244a6',
+                type: 'taxonomy',
+                operation: 'upsert',
+                api_name: 'delivery_production',
+                created_timestamp: '2019-07-18T15:07:17.6823904Z',
+                webhook_url: 'https://hooks.zapier.com/hooks/standard/47991d003732'
+            }
+        },
         outputFields: [
             {
                 key: 'system__id',

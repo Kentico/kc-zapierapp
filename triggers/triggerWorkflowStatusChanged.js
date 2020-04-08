@@ -13,7 +13,7 @@ const makeHookItemOutput = require('./makeHookItemOutput');
 const hookLabel = 'Variant Workflow Step Changed';
 
 async function subscribeHook(z, bundle) {
-    const stepIDs = bundle.inputData.workflowStepIds.map(i => ({id: i}));
+    const stepIDs = bundle.inputData.workflowStepIds.map(i => ({ id: i }));
     const data = {
         // bundle.targetUrl has the Hook URL this app should call when a recipe is created.
         name: `${bundle.inputData.name || hookLabel} (Zapier)`,
@@ -50,7 +50,7 @@ async function subscribeHook(z, bundle) {
 }
 
 async function parsePayload(z, bundle) {
-    if(!hasValidSignature(z, bundle)){
+    if (!hasValidSignature(z, bundle)) {
         throw new Error('Unable to verify webhook signature.');
     }
 
@@ -106,5 +106,35 @@ module.exports = {
 
         perform: parsePayload,
         performList: (z, bundle) => { return getTriggerSampleOutput(z, bundle, getSampleWorkflowPayload) },
+
+        sample: {
+            data: {
+                items: [
+                    {
+                        item: {
+                            id: 'e113e464-bffb-4fbd-a29b-47991d003732'
+                        },
+                        language: {
+                            id: '00000000-0000-0000-0000-000000000000'
+                        },
+                        transition_from: {
+                            id: '13145328-b946-4e47-9c9d-6f40c7aaeaef'
+                        },
+                        transition_to: {
+                            id: 'b4363ccd-8f21-45fd-a840-5843d7b7f008'
+                        }
+                    }
+                ]
+            },
+            message: {
+                id: 'e2f99f74-4111-4033-8eff-54073fbd4e32',
+                project_id: '11a3492b-cd32-0054-51d2-8234ec4244a6',
+                type: 'content_item_variant',
+                operation: 'change_workflow_step',
+                api_name: 'content_management',
+                created_timestamp: '2019-07-18T15:07:17.6823904Z',
+                webhook_url: 'https://hooks.zapier.com/hooks/standard/47991d003732'
+            }
+        }
     }
 };

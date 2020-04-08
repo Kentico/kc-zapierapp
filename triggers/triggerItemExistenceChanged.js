@@ -17,7 +17,7 @@ const events = {
 async function subscribeHook(z, bundle) {
     //If no events were selected, respond to all of them
     let watchedEvents = bundle.inputData.watchedEvents;
-    if(!watchedEvents) watchedEvents = Object.keys(events);
+    if (!watchedEvents) watchedEvents = Object.keys(events);
 
     const data = {
         // bundle.targetUrl has the Hook URL this app should call when a recipe is created.
@@ -55,7 +55,7 @@ async function subscribeHook(z, bundle) {
 }
 
 async function parsePayload(z, bundle) {
-    if(!hasValidSignature(z, bundle)){
+    if (!hasValidSignature(z, bundle)) {
         throw new Error('Unable to verify webhook signature.');
     }
 
@@ -73,7 +73,7 @@ async function parsePayload(z, bundle) {
     const payloadFunc = () => { return bundle.cleanedRequest; };
 
     //If responding to an 'archive' operation, variant isn't available anymore
-    if(bundle.cleanedRequest.message.operation === 'archive') {
+    if (bundle.cleanedRequest.message.operation === 'archive') {
         return await makeHookItemOutput(z, bundle, null, payloadFunc);
     }
     else {
@@ -115,5 +115,29 @@ module.exports = {
 
         perform: parsePayload,
         performList: (z, bundle) => { return getTriggerSampleOutput(z, bundle, getSampleItemExistencePayload) },
+
+        sample: {
+            data: {
+                items: [
+                    {
+                        item: {
+                            id: '42c21e82-0772-4d79-a6b3-c916e51b24ff'
+                        },
+                        language: {
+                            id: '00000000-0000-0000-0000-000000000000'
+                        }
+                    }
+                ]
+            },
+            message: {
+                id: 'a268da50-b3c5-4d09-9b36-6587c8dea500',
+                project_id: '11a3492b-cd32-0054-51d2-8234ec4244a6',
+                type: 'content_item_variant',
+                operation: 'restore',
+                api_name: 'content_management',
+                created_timestamp: '2019-07-18T10:52:33.1059256Z',
+                webhook_url: 'https://hooks.zapier.com/hooks/standard/47991d003732'
+            }
+        }
     }
 };

@@ -19,7 +19,7 @@ const events = {
 async function subscribeHook(z, bundle) {
     //If no events were selected, respond to all of them
     let watchedEvents = bundle.inputData.watchedEvents;
-    if(!watchedEvents) watchedEvents = Object.keys(events);
+    if (!watchedEvents) watchedEvents = Object.keys(events);
 
     const data = {
         // bundle.targetUrl has the Hook URL this app should call when a recipe is created.
@@ -57,7 +57,7 @@ async function subscribeHook(z, bundle) {
 }
 
 async function parsePayload(z, bundle) {
-    if(!hasValidSignature(z, bundle)){
+    if (!hasValidSignature(z, bundle)) {
         throw new Error('Unable to verify webhook signature.');
     }
 
@@ -68,7 +68,7 @@ async function parsePayload(z, bundle) {
     }
 
     const targetLanguageId = bundle.inputData.languageId;
-    if(targetLanguageId) {
+    if (targetLanguageId) {
         //language of POSTed item is a codename, get ID
         const language = await getLanguage(z, bundle, targetLanguageId);
         const languageCodename = language.codename;
@@ -115,5 +115,27 @@ module.exports = {
 
         perform: parsePayload,
         performList: (z, bundle) => { return getTriggerSampleOutput(z, bundle, getSampleItemPublishPayload) },
+
+        sample: {
+            data: {
+                items: [
+                    {
+                        id: 'e113e464-bffb-4fbd-a29b-47991d003732',
+                        codename: 'this_article_changed',
+                        language: 'en-US',
+                        type: 'article'
+                    }
+                ]
+            },
+            message: {
+                id: 'e2f99f74-4111-4033-8eff-54073fbd4e32',
+                project_id: '11a3492b-cd32-0054-51d2-8234ec4244a6',
+                type: 'content_item_variant',
+                operation: 'publish',
+                api_name: 'delivery_production',
+                created_timestamp: '2019-07-18T15:07:17.6823904Z',
+                webhook_url: 'https://hooks.zapier.com/hooks/standard/47991d003732'
+            }
+        }
     }
 };
