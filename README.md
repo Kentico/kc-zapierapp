@@ -85,19 +85,23 @@ You can find descriptions of formats that Zapier expects in fields [here](https:
 
 - __Linked items__:  
 ![linked items](./images/linkeditems.png)
+
 Acceptable values are content item IDs and external IDs. These can be used in any combination- for multiple linked items, some can be item IDs and some can be external IDs.  You can use the __Find Content Item__ action if you need to locate items for this field.
 You can add a single value to each line, or multiple values separated by comma. For example, the output of a previous step might be an array like "external_item_1, external_item_2." You can refer to this output in the linked item field on a single line.
 
 - __Taxonomy__:  
 ![taxonomy](./images/taxonomy.png)
+
 This field accepts taxonomy IDs or codenames. Similar to linked items, you can provide one value per line or comma-separated values on a single line.
 
 - __Assets__:  
 ![asset](./images/asset.png)
+
 Like taxonomy fields, you can provide the asset ID or codename of an asset, and values can be added on a single line separated by commas, or multiple lines. You can use the __Find Asset__ action to locate assets in your project.
 
 - __Dates and times__
 ![dates](./images/datetime.png)
+
 This follows the [formats specified by Zapier](https://zapier.com/help/create/basics/different-field-types-in-zaps#what-formats-are-supported). You can also pass a value obtained from a previous step as in the screenshot above. Some examples of acceptable datetimes are:
   - 11/11/2011
   - 11/11/2011 4PM CST
