@@ -1,8 +1,6 @@
 //const getOperatorChoices = require('./getOperatorChoices');
 
 const searchInfo = async function(z, bundle) {
-    if(bundle.inputData.findDefault) return;
-
     return {
         label: 'Search info',
         key: 'searchInfo',
@@ -14,8 +12,6 @@ const searchInfo = async function(z, bundle) {
 };
 
 const searchField = async function (z, bundle) {
-    if(bundle.inputData.findDefault) return;
-
     const choices = [
         { value: 'id', sample: 'id', label: 'Asset ID' },
         { value: 'externalId', sample: 'externalId', label: 'External ID' }
@@ -32,8 +28,6 @@ const searchField = async function (z, bundle) {
 };
 
 const searchOperator = async function (z, bundle) {
-    if(bundle.inputData.findDefault) return;
-
     const choices = [
         { value: '{0}={1}', sample: '{0}={1}', label: 'Equals' },
     ]; //await getOperatorChoices(z, bundle, contentTypeId, searchField); - TODO allow other operators
@@ -50,8 +44,6 @@ const searchOperator = async function (z, bundle) {
 };
 
 const searchValue = async function (z, bundle) {
-    if(bundle.inputData.findDefault) return;
-
     return {
         label: "Search value",
         key: "searchValue",

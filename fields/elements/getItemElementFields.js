@@ -20,7 +20,16 @@ async function getItemElementFields(z, bundle, contentTypeId) {
             case 'asset':
             case 'taxonomy':
                 base.helpText += ' The value of this field should be a comma-separated list of IDs or codenames, or a single value on each line.';
-        
+        }
+
+        //provide selectable options for multichoice
+        if(element.type === 'multiple_choice') {
+            base['choices'] = element.options.map(o => ({
+                label: o.name,
+                value: o.codename
+            }));
+            
+            if(element.mode === 'single') extra['list'] = false;
         }
 
         return Object.assign(base, extra);
