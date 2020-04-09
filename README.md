@@ -13,7 +13,7 @@ This integration contains 4 triggers, 4 actions, and 4 searches:
     - Variant published status change
     - Variant created or deleted
     - Taxonomy group changed
-- __Actions__
+- [__Actions__](#actions)
     - Create content item
     - Change variant workflow step
     - Update language variant
@@ -76,6 +76,33 @@ There is also another optional field called __Content Type For Samples__. If you
 5. Click __Test and Review__ to get a sample item from your Kontent project. This allows you to configure later steps using fields from your content items.
 
 The output of the triggers will be the payload sent from Kontent, which you can read more about [here](https://docs.kontent.ai/reference/webhooks-reference). To find additional data about the item which triggered the webhook, you can use the __Find Content Item__ action.
+
+## Actions
+
+The integration contains actions to upsert/delete variants, create a content item, and change a variant's workflow step. For many of these steps, you are required to enter data in a particular format that Kontent will understand, e.g. in a __Linked items__ element.
+
+You can find descriptions of formats that Zapier expects in fields [here](https://zapier.com/help/create/basics/different-field-types-in-zaps). As for the Kontent integration, here's some examples of the data to provide action steps:
+
+- __Linked items__:  
+![linked items](./images/linkeditems.png)
+Acceptable values are content item IDs and external IDs. These can be used in any combination- for multiple linked items, some can be item IDs and some can be external IDs.  You can use the __Find Content Item__ action if you need to locate items for this field.
+You can add a single value to each line, or multiple values separated by comma. For example, the output of a previous step might be an array like "external_item_1, external_item_2." You can refer to this output in the linked item field on a single line.
+
+- __Taxonomy__:  
+![taxonomy](./images/taxonomy.png)
+This field accepts taxonomy IDs or codenames. Similar to linked items, you can provide one value per line or comma-separated values on a single line.
+
+- __Assets__:  
+![asset](./images/asset.png)
+Like taxonomy fields, you can provide the asset ID or codename of an asset, and values can be added on a single line separated by commas, or multiple lines. You can use the __Find Asset__ action to locate assets in your project.
+
+- __Dates and times__
+![dates](./images/datetime.png)
+This follows the [formats specified by Zapier](https://zapier.com/help/create/basics/different-field-types-in-zaps#what-formats-are-supported). You can also pass a value obtained from a previous step as in the screenshot above. Some examples of acceptable datetimes are:
+  - 11/11/2011
+  - 11/11/2011 4PM CST
+  - next friday at 7pm
+  - 2019-03-27T13:10:01.791Z
 
 ## Searches
 
