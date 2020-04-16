@@ -25,7 +25,7 @@ function getSampleWorkflowPayload(z, bundle, sampleItem) {
       operation: 'change_workflow_step',
       api_name: 'content_management',
       created_timestamp: new Date().toJSON(),
-      webhook_url: bundle.targetUrl
+      webhook_url: bundle.targetUrl ? bundle.targetUrl : 'https://hooks.zapier.com/hooks/standard/47991d003732'
     }
   }
 }

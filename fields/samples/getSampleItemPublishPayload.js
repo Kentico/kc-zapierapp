@@ -17,7 +17,7 @@ function getSampleItemPublishPayload(z, bundle, sampleItem) {
       operation: 'publish',
       api_name: 'delivery_production',
       created_timestamp: new Date().toJSON(),
-      webhook_url: bundle.targetUrl
+      webhook_url: bundle.targetUrl ? bundle.targetUrl : 'https://hooks.zapier.com/hooks/standard/47991d003732'
     }
   }
 }

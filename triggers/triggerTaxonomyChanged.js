@@ -186,27 +186,5 @@ module.exports = {
                 webhook_url: 'https://hooks.zapier.com/hooks/standard/47991d003732'
             }
         },
-        outputFields: [
-            {
-                key: 'system__id',
-                label: 'Group ID',
-                type: 'string',
-            },
-            {
-                key: 'system__name',
-                label: 'Group name',
-                type: 'string',
-            },
-            {
-                key: 'system__last_modified',
-                label: 'Last modified',
-                type: 'datetime',
-            },
-            {
-                key: 'system__codename',
-                label: 'Group codename',
-                type: 'string',
-            },
-        ]
     }
 };

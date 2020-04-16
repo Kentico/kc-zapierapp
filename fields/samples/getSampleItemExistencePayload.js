@@ -19,7 +19,7 @@ function getSampleItemExistencePayload(z, bundle, sampleItem) {
             operation: 'restore',
             api_name: 'content_management',
             created_timestamp: new Date().toJSON(),
-            webhook_url: bundle.targetUrl
+            webhook_url: bundle.targetUrl ? bundle.targetUrl : 'https://hooks.zapier.com/hooks/standard/47991d003732'
         }
     }
 }
