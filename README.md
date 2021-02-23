@@ -221,4 +221,3 @@ You can now test the Zap by publishing an Event content item in Kontent which ha
 
 ![history](./images/history.png)
 
-![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/kontent-zapier-cli?pixel)
