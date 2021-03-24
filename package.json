@@ -8,6 +8,7 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
+    "zapier-test": "zapier test",
     "test": "mocha --recursive"
   },
   "engines": {
@@ -18,6 +19,7 @@
     "zapier-platform-core": "9.1.0"
   },
   "devDependencies": {
+    "zapier-platform-cli": "^10.2.0",
     "mocha": "^5.2.0",
     "should": "^13.2.0"
   }
