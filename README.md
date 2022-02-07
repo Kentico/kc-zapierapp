@@ -28,7 +28,7 @@ This integration contains 4 triggers, 4 actions, and 4 searches:
 
 Using the Kentico Kontent integration, you only need to configure the Zap in Zapier. The creation of the webhook in Kontent is handled automatically by the integration; the webhook will be created when you turn on the Zap, and deleted when you turn it off.
 
-The output of a trigger in Zapier is exactly what [Kontent's webhook](https://docs.kontent.ai/reference/webhooks-reference) POSTs to Zapier. It will looks something like this:
+The output of a trigger in Zapier is exactly what [Kontent's webhook](https://kontent.ai/learn/reference/webhooks-reference) POSTs to Zapier. It will looks something like this:
 
 ```js
 {
@@ -75,7 +75,7 @@ There is also another optional field called __Content Type For Samples__. If you
 
 5. Click __Test and Review__ to get a sample item from your Kontent project. This allows you to configure later steps using fields from your content items.
 
-The output of the triggers will be the payload sent from Kontent, which you can read more about [here](https://docs.kontent.ai/reference/webhooks-reference). To find additional data about the item which triggered the webhook, you can use the __Find Content Item__ action.
+The output of the triggers will be the payload sent from Kontent, which you can read more about in [webhooks reference](https://kontent.ai/learn/reference/webhooks-reference). To find additional data about the item which triggered the webhook, you can use the __Find Content Item__ action.
 
 ## Actions
 
