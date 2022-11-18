@@ -1,0 +1,43 @@
+import { getWorkflowSteps } from '../../utils/workflows/getWorkflowSteps';
+import { ZObject } from 'zapier-platform-core';
+import { KontentBundle } from '../../types/kontentBundle';
+import { OutputField } from '../../fields/output/outputField';
+import { OutputFromOutputFields } from '../../fields/output/outputFromOutputFields';
+
+const execute = (z: ZObject, bundle: KontentBundle<{}>): Promise<Output> =>
+  getWorkflowSteps(z, bundle)
+    .then(steps => steps.map(s => ({ id: s.id, name: s.name })));
+
+const outputFields = [
+  {
+    key: 'id',
+    label: 'Workflow step ID',
+    type: 'string',
+  },
+  {
+    key: 'name',
+    label: 'Workflow step name',
+    type: 'string',
+  },
+] as const satisfies ReadonlyArray<OutputField>;
+
+type Output = ReadonlyArray<OutputFromOutputFields<typeof outputFields>>;
+
+export default {
+  noun: 'Workflow step',
+  display: {
+    hidden: true,
+    important: false,
+    description: 'Gets workflow steps for the input dropdown, in the order, in which they are defined in Kentico Kontent.',
+    label: 'Get Workflow Steps',
+  },
+  key: 'get_workflow_steps',
+  operation: {
+    perform: execute,
+    sample: {
+      id: '88ac5e6e-1c5c-4638-96e1-0d61221ad5bf',
+      name: 'Draft',
+    },
+    outputFields,
+  },
+};
