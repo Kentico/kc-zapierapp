@@ -81,7 +81,7 @@ const getElementName = (element: ElementWithoutSnippets): string => {
 const createElementHelpText = (element: ElementWithoutSnippets): string | undefined => {
   switch (element.type) {
     case 'modular_content':
-      return element.guidelines + ' The value of this field should be a comma-separated list of content item IDs or [external IDs](https://docs.kontent.ai/reference/management-api-v2#section/External-IDs-for-imported-content), or a single value on each line.';
+      return element.guidelines + ' The value of this field should be a comma-separated list of content item IDs or [external IDs](https://kontent.ai/learn/reference/management-api-v2/#section/Reference-object), or a single value on each line.';
     case 'multiple_choice':
     case 'asset':
     case 'taxonomy':

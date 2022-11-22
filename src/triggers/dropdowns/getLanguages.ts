@@ -33,7 +33,7 @@ export default {
   display: {
     hidden: true,
     important: false,
-    description: 'Gets languages for the input dropdown, in the order, in which they are defined in Kentico Kontent.',
+    description: 'Gets languages for the input dropdown, in the order, in which they are defined in Kontent.ai.',
     label: 'Get Languages',
   },
   key: 'get_languages',

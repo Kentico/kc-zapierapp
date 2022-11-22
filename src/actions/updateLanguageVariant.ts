@@ -20,9 +20,9 @@ const elementsInfoField: Field = {
   label: 'Elements',
   helpText: `#### Content item variant elements
                 
-The following inputs represent elements of a chosen content type as defined in Kentico Kontent. Element data is stored per language version.
+The following inputs represent elements of a chosen content type as defined in Kontent.ai. Element data is stored per language version.
 
-[Read more about elements ...](https://docs.kontent.ai/tutorials/define-content-structure/content-elements/content-type-elements-reference)`,
+[Read more about elements ...](https://kontent.ai/learn/reference/management-api-v2/#tag/Elements-in-content-types)`,
   key: 'elements_header',
   type: 'copy',
 };
