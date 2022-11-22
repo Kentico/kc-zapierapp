@@ -73,7 +73,7 @@ export const handleErrors = (response: HttpResponse) => {
     throw new Error(`Request failed with code ${response.status}.\nResponse: ${response.content}`);
   }
   if (response.status === 401) {
-    throw new Error(`Request failed with code 401. Please disable Secure Access in Kentico Kontent or provide a Secure Access key.`);
+    throw new Error(`Request failed with code 401. Please disable Secure Access in Kontent.ai or provide a Secure Access key.`);
   }
 
   response.throwForStatus();

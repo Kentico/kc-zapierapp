@@ -28,7 +28,7 @@ export default {
   display: {
     hidden: true,
     important: false,
-    description: 'Gets workflow steps for the input dropdown, in the order, in which they are defined in Kentico Kontent.',
+    description: 'Gets workflow steps for the input dropdown, in the order, in which they are defined in Kontent.ai.',
     label: 'Get Workflow Steps',
   },
   key: 'get_workflow_steps',

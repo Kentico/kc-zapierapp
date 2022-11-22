@@ -180,7 +180,7 @@ export const changeContentItemWorkflow = {
       }),
       getWorkflowStepField({
         required: true,
-        helpText: 'Select a workflow step to which the content item should move.\n\n[More about workflow in Kentico Kontent ...](https://docs.kontent.ai/tutorials/collaborate-with-your-team/workflows/setting-up-a-workflow-for-your-content)',
+        helpText: 'Select a workflow step to which the content item should move.\n\n[More about workflow in Kontent.ai ...](https://kontent.ai/learn/tutorials/manage-kontent-ai/roles-and-workflow/manage-workflows/)',
         search: 'find_workflow_step.id',
       }),
       getScheduledPublishingFields,

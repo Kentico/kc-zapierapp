@@ -74,7 +74,7 @@ export default {
     inputFields: [
       {
         label: 'Webhook name',
-        helpText: 'Enter a webhook name which will appear in the Kentico Kontent admin UI.',
+        helpText: 'Enter a webhook name which will appear in the Kontent.ai admin UI.',
         key: 'name',
         type: 'string',
       },
