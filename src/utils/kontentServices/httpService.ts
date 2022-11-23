@@ -1,12 +1,13 @@
 import { HttpResponse, ZObject } from 'zapier-platform-core';
 import { IDeliveryClientConfig } from '@kontent-ai/delivery-sdk';
+import { trackingHeader } from './trackingHeader';
 
 export const createHttpService = (z: ZObject): IDeliveryClientConfig['httpService'] => ({
   getAsync: (call, options) =>
     z.request({
       method: 'GET',
       url: call.url,
-      headers: options?.headers && Object.fromEntries(options.headers.map(h => [h.header, h.value] as const)),
+      headers: Object.fromEntries(getHeaders(options?.headers).map(h => [h.header, h.value] as const)),
     })
       .then(handleErrors)
       .then(createResponse),
@@ -16,7 +17,7 @@ export const createHttpService = (z: ZObject): IDeliveryClientConfig['httpServic
       method: 'PATCH',
       url: call.url,
       body: z.JSON.stringify(call.body),
-      headers: options?.headers && Object.fromEntries(options.headers.map(h => [h.header, h.value] as const)),
+      headers: Object.fromEntries(getHeaders(options?.headers).map(h => [h.header, h.value] as const)),
     })
       .then(handleErrors)
       .then(createResponse),
@@ -26,7 +27,7 @@ export const createHttpService = (z: ZObject): IDeliveryClientConfig['httpServic
       method: 'PUT',
       url: call.url,
       body: z.JSON.stringify(call.body),
-      headers: options?.headers && Object.fromEntries(options.headers.map(h => [h.header, h.value] as const)),
+      headers: Object.fromEntries(getHeaders(options?.headers).map(h => [h.header, h.value] as const)),
     })
       .then(handleErrors)
       .then(createResponse),
@@ -36,7 +37,7 @@ export const createHttpService = (z: ZObject): IDeliveryClientConfig['httpServic
       method: 'POST',
       url: call.url,
       body: z.JSON.stringify(call.body),
-      headers: options?.headers && Object.fromEntries(options.headers.map(h => [h.header, h.value] as const)),
+      headers: Object.fromEntries(getHeaders(options?.headers).map(h => [h.header, h.value] as const)),
     })
       .then(handleErrors)
       .then(createResponse),
@@ -45,7 +46,7 @@ export const createHttpService = (z: ZObject): IDeliveryClientConfig['httpServic
     z.request({
       method: 'DELETE',
       url: call.url,
-      headers: options?.headers && Object.fromEntries(options.headers.map(h => [h.header, h.value] as const)),
+      headers: Object.fromEntries(getHeaders(options?.headers).map(h => [h.header, h.value] as const)),
     })
       .then(handleErrors)
       .then(createResponse),
@@ -80,3 +81,8 @@ export const handleErrors = (response: HttpResponse) => {
 
   return response;
 };
+
+type Header = Readonly<{ header: string; value: string }>;
+
+const getHeaders = (passedHeaders: ReadonlyArray<Header> | undefined): ReadonlyArray<Header> =>
+  [...passedHeaders ?? [], trackingHeader];
