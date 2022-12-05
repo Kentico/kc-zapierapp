@@ -128,9 +128,9 @@ export default {
       },
     },
   },
-};
+} as const;
 
-type InputData = Readonly<{
+export type InputData = Readonly<{
   name?: string;
   watchedEvents?: ReadonlyArray<string>;
   languageId?: string;

@@ -190,9 +190,9 @@ export const changeContentItemWorkflow = {
       message: 'Content item workflow step has changed',
     },
   },
-};
+} as const;
 
-type InputData = Readonly<{
+export type InputData = Readonly<{
   fullItemId?: string;
   workflowStepIds: string;
   publishDate?: string;

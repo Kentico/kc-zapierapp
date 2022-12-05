@@ -6,7 +6,10 @@ import { OutputFromOutputFields } from '../../fields/output/outputFromOutputFiel
 
 const execute = (z: ZObject, bundle: KontentBundle<{}>): Promise<Output> =>
   getLanguages(z, bundle)
-    .then(res => res.map(l => ({ id: l.id, name: l.name, codename: l.codename })));
+    .then(res => res
+      .filter(l => l.isActive)
+      .map(l => ({ id: l.id, name: l.name, codename: l.codename })),
+    );
 
 const outputFields = [
   {
@@ -46,4 +49,4 @@ export default {
     },
     outputFields,
   },
-};
+} as const;
