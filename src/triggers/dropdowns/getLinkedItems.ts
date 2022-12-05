@@ -40,4 +40,4 @@ export default {
     canPaginate: true,
     outputFields: deliveryItemOutputFields,
   },
-};
+} as const;

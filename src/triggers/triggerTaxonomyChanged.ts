@@ -147,7 +147,7 @@ export default {
       }
     },
   },
-};
+} as const;
 
 type InputData = Readonly<{
   name?: string;

@@ -10,7 +10,7 @@ export const getItemElementFields = async (z: ZObject, bundle: KontentBundle<{}>
     .then(elements => elements.map(getSimpleElementField));
 
 export type ElementFields = Readonly<{
-  [key: `elements_${string}`]: string | string[] | number | undefined;
+  [key: `elements__${string}`]: string | string[] | number | undefined;
 }>;
 
 function getSimpleElementField(element: ContentTypeElements.ContentTypeElementModel) {

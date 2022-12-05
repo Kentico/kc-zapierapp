@@ -65,9 +65,9 @@ export const createContentItem = {
     sample: contentItemSample,
     outputFields: contentItemOutputFields,
   },
-};
+} as const;
 
-type InputData = Readonly<{
+export type InputData = Readonly<{
     languageId: string;
     contentTypeId: string;
     name: string;

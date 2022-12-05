@@ -147,10 +147,9 @@ export const findAsset = {
       url: 'https://assets-us-01.kc-usercontent.com/8d20758c-d74c-4f59-ae04-ee928c0816b7/adf26cd2-1acb-403f-9d1e-6d04e46c39f1/file_name.png',
     },
   },
-};
+} as const;
 
-type InputData = Readonly<{
-  searchInfo: string;
+export type InputData = Readonly<{
   searchField: string;
   searchPattern: string;
   searchValue: string;
@@ -162,7 +161,7 @@ const prepareAssetForOutput = (asset: AssetModels.Asset): Output[number] => ({
   title: asset.title || '',
   imageHeight: asset.imageHeight ?? undefined,
   imageWidth: asset.imageWidth ?? undefined,
-  lastModified: asset.lastModified.toString(),
+  lastModified: asset.lastModified.toISOString(),
   folder: { id: asset.folder?.id ?? undefined },
   url: asset.url,
   type: asset.type,

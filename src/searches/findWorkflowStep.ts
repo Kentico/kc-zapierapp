@@ -78,9 +78,9 @@ export default {
     },
     outputFields,
   },
-};
+} as const;
 
-type InputData = Readonly<{
+export type InputData = Readonly<{
   stepName: string;
 }>;
 

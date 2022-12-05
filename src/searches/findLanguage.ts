@@ -95,9 +95,9 @@ export const findLanguage = {
       },
     },
   },
-};
+} as const;
 
-type InputData = LanguageSearchFieldsOutput;
+export type InputData = LanguageSearchFieldsOutput;
 
 const prepareLanguageForOutput = (language: LanguageModels.LanguageModel): Output[number] => ({
   id: language.id,

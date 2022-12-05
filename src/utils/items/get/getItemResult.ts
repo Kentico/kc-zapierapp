@@ -115,7 +115,7 @@ export async function getItemResult(z: ZObject, bundle: KontentBundle<{}>, item:
       type: contentType.codename,
       language: language.codename,
       externalId: item.externalId || '',
-      lastModified: variant.lastModified.toString(),
+      lastModified: variant.lastModified.toISOString(),
       fullId: fullId,
       workflowStepId: variant.workflowStep.id || '',
       contentTypeId: item.type.id,
