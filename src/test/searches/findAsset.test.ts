@@ -5,6 +5,7 @@ import { AssetContracts, ManagementClient } from "@kontent-ai/management-sdk";
 import App from "../../index";
 import { KontentBundle } from "../../types/kontentBundle";
 import { findAsset, InputData } from "../../searches/findAsset";
+import { createUTCDate } from "../utils/date";
 
 const appTester = createAppTester(App);
 nock.disableNetConnect();
@@ -59,7 +60,7 @@ describe("findAsset", () => {
       descriptions: [],
       image_height: 1080,
       image_width: 1920,
-      last_modified: new Date(1278, 8, 26).toISOString(),
+      last_modified: createUTCDate(1278, 8, 26).toISOString(),
       file_reference: {
         type: "internal",
         id: "bc28f312-dab4-4ee3-9f52-e53a1017d324",
@@ -95,7 +96,7 @@ describe("findAsset", () => {
           "id": "d0442642-6e09-44a0-a5d3-1e842030cee6",
           "imageHeight": 1080,
           "imageWidth": 1920,
-          "lastModified": "1278-09-25T23:02:16.000Z",
+          "lastModified": "1278-08-26T00:00:00.000Z",
           "size": 300000,
           "title": "test asset",
           "type": "image/png",
@@ -120,7 +121,7 @@ describe("findAsset", () => {
           "id": "d0442642-6e09-44a0-a5d3-1e842030cee6",
           "imageHeight": 1080,
           "imageWidth": 1920,
-          "lastModified": "1278-09-25T23:02:16.000Z",
+          "lastModified": "1278-08-26T00:00:00.000Z",
           "size": 300000,
           "title": "test asset found by external id",
           "type": "image/png",

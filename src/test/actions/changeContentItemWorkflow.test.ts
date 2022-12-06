@@ -5,6 +5,7 @@ import { LanguageVariantContracts, ManagementClient, WorkflowContracts } from '@
 import App from '../../index';
 import { KontentBundle } from '../../types/kontentBundle';
 import { changeContentItemWorkflow, InputData } from '../../actions/changeContentItemWorkflow';
+import { createUTCDate } from '../utils/date';
 
 const appTester = createAppTester(App);
 nock.disableNetConnect();
@@ -76,6 +77,6 @@ const rawVariant: LanguageVariantContracts.ILanguageVariantModelContract = {
   item: { id: "db2dcddc-62c5-41a7-81f5-9f958f69b0bd" },
   language: { id: "984efe5c-6898-4d51-8afa-a66b9de51cc0" },
   elements: [],
-  last_modified: new Date(1316, 5, 14).toISOString(),
+  last_modified: createUTCDate(1316, 5, 14).toISOString(),
   workflow_step: { id: rawWfSteps[0]?.id },
 };

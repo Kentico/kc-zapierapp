@@ -14,6 +14,7 @@ import {
   deleteLanguageVariant,
   InputData,
 } from "../../actions/deleteLanguageVariant";
+import { createUTCDate } from "../utils/date";
 
 const appTester = createAppTester(App);
 nock.disableNetConnect();
@@ -87,7 +88,7 @@ describe("deleteLanguageVariant", () => {
           "id": "9d309f21-5326-42e3-ab12-0c4a5e9db64d",
           "language": "sample_language",
           "languageId": "e3a742b4-a946-4baa-bf93-39ad1d13834b",
-          "lastModified": "1316-06-13T23:02:16.000Z",
+          "lastModified": "1316-05-14T00:00:00.000Z",
           "name": "Some Item Name",
           "projectId": "ae6f7ad5-766c-4b03-a118-56f65e45db7b",
           "type": "sample_content_type",
@@ -121,7 +122,7 @@ describe("deleteLanguageVariant", () => {
           "id": "9d309f21-5326-42e3-ab12-0c4a5e9db64d",
           "language": "sample_language",
           "languageId": "e3a742b4-a946-4baa-bf93-39ad1d13834b",
-          "lastModified": "1316-06-13T23:02:16.000Z",
+          "lastModified": "1316-05-14T00:00:00.000Z",
           "name": "Some Item Name",
           "projectId": "ae6f7ad5-766c-4b03-a118-56f65e45db7b",
           "type": "sample_content_type",
@@ -155,7 +156,7 @@ describe("deleteLanguageVariant", () => {
           "id": "9d309f21-5326-42e3-ab12-0c4a5e9db64d",
           "language": "sample_language",
           "languageId": "e3a742b4-a946-4baa-bf93-39ad1d13834b",
-          "lastModified": "1316-06-13T23:02:16.000Z",
+          "lastModified": "1316-05-14T00:00:00.000Z",
           "name": "Some Item Name",
           "projectId": "ae6f7ad5-766c-4b03-a118-56f65e45db7b",
           "type": "sample_content_type",
@@ -178,7 +179,7 @@ const rawContentType: ContentTypeContracts.IContentTypeContract = {
   id: "22d83f4d-dec4-458b-8ef8-fc4a05761524",
   name: "Sample content type",
   codename: "sample_content_type",
-  last_modified: new Date(1212, 9, 26).toISOString(),
+  last_modified: createUTCDate(1212, 9, 26).toISOString(),
   elements: [],
 };
 
@@ -189,13 +190,13 @@ const rawItem: ContentItemContracts.IContentItemModelContract = {
   collection: { id: "1da391cf-d664-4492-a8f4-74420a08a069" },
   type: { id: rawContentType.id },
   external_id: "item_external_id",
-  last_modified: new Date(1355, 4, 5),
+  last_modified: createUTCDate(1355, 4, 5),
 };
 
 const rawVariant: LanguageVariantContracts.ILanguageVariantModelContract = {
   item: { id: rawItem.id },
   language: { id: rawLanguage.id },
   elements: [],
-  last_modified: new Date(1316, 5, 14).toISOString(),
+  last_modified: createUTCDate(1316, 5, 14).toISOString(),
   workflow_step: { id: "6b7590d5-75e5-4860-8cc0-02c5bffce2dc" },
 };
