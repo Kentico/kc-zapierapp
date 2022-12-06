@@ -2,7 +2,7 @@
   "name": "zapier-cli",
   "version": "0.2.0",
   "scripts": {
-    "test": "npm run build && jest --testTimeout 10000 --rootDir ./lib/test",
+    "test": "jest",
     "build": "tsc",
     "watch": "tsc --watch",
     "buildAndPush": "npm run build && zapier push"
