@@ -1,11 +1,12 @@
-import { createAppTester } from 'zapier-platform-core';
-import App from '../../../index';
-import * as nock from 'nock';
-import { mockBundle } from '../../utils/mockBundle';
-import { Contracts, DeliveryClient } from '@kontent-ai/delivery-sdk';
-import { KontentBundle } from '../../../types/kontentBundle';
-import getContentItems from '../../../triggers/dropdowns/getContentItems';
-import { ManagementClient } from '@kontent-ai/management-sdk';
+import { createAppTester } from "zapier-platform-core";
+import App from "../../../index";
+import * as nock from "nock";
+import { mockBundle } from "../../utils/mockBundle";
+import { Contracts, DeliveryClient } from "@kontent-ai/delivery-sdk";
+import { KontentBundle } from "../../../types/kontentBundle";
+import getContentItems from "../../../triggers/dropdowns/getContentItems";
+import { ManagementClient } from "@kontent-ai/management-sdk";
+import { createUTCDate } from "../../utils/date";
 
 const appTester = createAppTester(App);
 nock.disableNetConnect();
@@ -38,7 +39,7 @@ describe("getContentItems", () => {
             id: "2734c1cb-3b52-46ef-954d-9c1c12a5da58",
             name: "content item 1",
             codename: "content_item_1",
-            last_modified: new Date(1212, 9, 26).toISOString(),
+            last_modified: createUTCDate(1212, 9, 26).toISOString(),
             type: "21c631c7-41ce-45d8-9986-1002c1243e14",
             collection: "default",
             language: languages[0].codename,
@@ -52,7 +53,7 @@ describe("getContentItems", () => {
             id: "878609b4-11dd-4ef8-a394-06a2f5b0c26d",
             name: "content item 2",
             codename: "content_item_2",
-            last_modified: new Date(1316, 5, 14).toISOString(),
+            last_modified: createUTCDate(1316, 5, 14).toISOString(),
             type: "9d449599-5353-41d8-8167-7ed740d19543",
             collection: "some_collection",
             language: languages[1].codename,
@@ -93,7 +94,7 @@ describe("getContentItems", () => {
           "id": "2734c1cb-3b52-46ef-954d-9c1c12a5da58",
           "language": "default_language",
           "languageId": "c12c2ee8-14b2-4cba-a397-b1dd61916cb0",
-          "lastModified": "1212-10-25T23:02:16.000Z",
+          "lastModified": "1212-09-26T00:00:00.000Z",
           "name": "content item 1",
           "type": "21c631c7-41ce-45d8-9986-1002c1243e14",
           "workflowStep": "draft",
@@ -104,7 +105,7 @@ describe("getContentItems", () => {
           "id": "878609b4-11dd-4ef8-a394-06a2f5b0c26d",
           "language": "czech",
           "languageId": "ea41ad6e-a75c-4246-99d9-3293768c74f0",
-          "lastModified": "1316-06-13T23:02:16.000Z",
+          "lastModified": "1316-05-14T00:00:00.000Z",
           "name": "content item 2",
           "type": "9d449599-5353-41d8-8167-7ed740d19543",
           "workflowStep": "",

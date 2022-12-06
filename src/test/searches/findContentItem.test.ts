@@ -12,6 +12,7 @@ import { KontentBundle } from "../../types/kontentBundle";
 import { LanguageVariantContracts } from "@kontent-ai/management-sdk/lib/contracts";
 import { Contracts, DeliveryClient } from "@kontent-ai/delivery-sdk";
 import findContentItem, { InputData } from "../../searches/findContentItem";
+import { createUTCDate } from "../utils/date";
 
 const appTester = createAppTester(App);
 nock.disableNetConnect();
@@ -141,7 +142,7 @@ describe("findContentItem", () => {
             "id": "0de95e3e-2568-4aec-b996-dc71b1cf2944",
             "language": "test_language",
             "languageId": "2493d2af-27cd-4bb0-9f95-862ad58026ff",
-            "lastModified": "1231-01-14T23:02:16.000Z",
+            "lastModified": "1230-12-15T00:00:00.000Z",
             "name": "test content item",
             "projectId": "ae6f7ad5-766c-4b03-a118-56f65e45db7b",
             "type": "test_content_type",
@@ -174,7 +175,7 @@ describe("findContentItem", () => {
             "id": "0de95e3e-2568-4aec-b996-dc71b1cf2944",
             "language": "test_language",
             "languageId": "2493d2af-27cd-4bb0-9f95-862ad58026ff",
-            "lastModified": "1231-01-14T23:02:16.000Z",
+            "lastModified": "1230-12-15T00:00:00.000Z",
             "name": "test content item",
             "projectId": "ae6f7ad5-766c-4b03-a118-56f65e45db7b",
             "type": "test_content_type",
@@ -207,7 +208,7 @@ describe("findContentItem", () => {
             "id": "0de95e3e-2568-4aec-b996-dc71b1cf2944",
             "language": "test_language",
             "languageId": "2493d2af-27cd-4bb0-9f95-862ad58026ff",
-            "lastModified": "1231-01-14T23:02:16.000Z",
+            "lastModified": "1230-12-15T00:00:00.000Z",
             "name": "test content item",
             "projectId": "ae6f7ad5-766c-4b03-a118-56f65e45db7b",
             "type": "test_content_type",
@@ -240,7 +241,7 @@ describe("findContentItem", () => {
             "id": "0de95e3e-2568-4aec-b996-dc71b1cf2944",
             "language": "test_language",
             "languageId": "2493d2af-27cd-4bb0-9f95-862ad58026ff",
-            "lastModified": "1231-01-14T23:02:16.000Z",
+            "lastModified": "1230-12-15T00:00:00.000Z",
             "name": "test content item",
             "projectId": "ae6f7ad5-766c-4b03-a118-56f65e45db7b",
             "type": "test_content_type",
@@ -256,7 +257,7 @@ const rawContentType: ContentTypeContracts.IContentTypeContract = {
   id: "aea2d2cf-f38a-4260-bb95-ac0bcd7587de",
   name: "test content type",
   codename: "test_content_type",
-  last_modified: new Date(1348, 4, 7).toISOString(),
+  last_modified: createUTCDate(1348, 4, 7).toISOString(),
   elements: [
     {
       id: "50702d62-b381-45bd-816e-57bf1ccd2de6",
@@ -272,7 +273,7 @@ const rawContentItem: ContentItemContracts.IContentItemModelContract = {
   type: { id: rawContentType.id, codename: rawContentType.codename },
   name: "test content item",
   codename: "test_content_item",
-  last_modified: new Date(1356, 12, 25),
+  last_modified: createUTCDate(1356, 12, 25),
   collection: { id: "db3ccd21-55db-4ca1-bf85-062538b772c8" },
   external_id: "test_item_external_id",
 };
@@ -289,7 +290,7 @@ const rawVariant: LanguageVariantContracts.IListLanguageVariantsOfItemResponseCo
   {
     item: rawContentItem,
     language: rawLanguage,
-    last_modified: new Date(1230, 12, 15).toISOString(),
+    last_modified: createUTCDate(1230, 12, 15).toISOString(),
     workflow_step: {
       id: "89205fc8-bf8e-4bc3-9eb2-725c9623ef40",
       codename: "draft",

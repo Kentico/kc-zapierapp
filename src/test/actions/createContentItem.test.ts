@@ -1,16 +1,17 @@
-import { createAppTester } from 'zapier-platform-core';
-import * as nock from 'nock';
-import { addInputData, mockBundle } from '../utils/mockBundle';
+import { createAppTester } from "zapier-platform-core";
+import * as nock from "nock";
+import { addInputData, mockBundle } from "../utils/mockBundle";
 import {
   ContentItemContracts,
   ContentTypeContracts,
   LanguageContracts,
   LanguageVariantContracts,
   ManagementClient,
-} from '@kontent-ai/management-sdk';
-import App from '../../index';
-import { KontentBundle } from '../../types/kontentBundle';
-import { createContentItem, InputData } from '../../actions/createContentItem';
+} from "@kontent-ai/management-sdk";
+import App from "../../index";
+import { KontentBundle } from "../../types/kontentBundle";
+import { createContentItem, InputData } from "../../actions/createContentItem";
+import { createUTCDate } from "../utils/date";
 
 const appTester = createAppTester(App);
 nock.disableNetConnect();
@@ -61,7 +62,7 @@ describe("createContentItem", () => {
         codename: "generated_codename",
         type: { id: rawContentType.id, codename: rawContentType.codename },
         external_id: itemExternalId,
-        last_modified: new Date(1993, 1, 1),
+        last_modified: createUTCDate(1993, 1, 1),
         collection: { id: "00000000-0000-0000-0000-000000000000" },
       } as ContentItemContracts.IAddContentItemResponseContract);
 
@@ -76,7 +77,7 @@ describe("createContentItem", () => {
         item: { id: itemId },
         language: { id: rawLanguage.id },
         elements: [],
-        last_modified: new Date(1993, 1, 1).toISOString(),
+        last_modified: createUTCDate(1993, 1, 1).toISOString(),
         workflow_step: { id: "3ecd7341-ad09-44b1-b457-4257ba3fa73b" },
       } as LanguageVariantContracts.IUpsertLanguageVariantResponseContract);
 
@@ -96,7 +97,7 @@ describe("createContentItem", () => {
           "id": "e819c466-4b0c-4fd9-9441-b41dd85a1cdc",
           "language": "test_language",
           "languageId": "ed733acb-e1e2-4c82-bfe4-ae82f73908f9",
-          "lastModified": "1993-01-31T23:00:00.000Z",
+          "lastModified": "1993-01-01T00:00:00.000Z",
           "name": "Created item name",
           "projectId": "ae6f7ad5-766c-4b03-a118-56f65e45db7b",
           "type": "test_content_type",
@@ -112,7 +113,7 @@ const rawContentType: ContentTypeContracts.IContentTypeContract = {
   name: "Test content type",
   codename: "test_content_type",
   elements: [],
-  last_modified: new Date(1348, 4, 7).toISOString(),
+  last_modified: createUTCDate(1348, 4, 7).toISOString(),
 };
 
 const rawLanguage: LanguageContracts.ILanguageModelContract = {

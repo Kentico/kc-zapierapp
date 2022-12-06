@@ -3,6 +3,7 @@ import { mockBundle } from './mockBundle';
 import { ManagementClient } from '@kontent-ai/management-sdk';
 import * as nock from 'nock';
 import { WebhookModels } from '@kontent-ai/management-sdk/lib/models';
+import { createUTCDate } from './date';
 
 type ExpectedInputDataBase = Readonly<{
   languageId: string;
@@ -57,7 +58,7 @@ export const prepareMocksForWebhookSubscribeTest = <InputData extends ExpectedIn
         workflow_step_changes: [],
         ...params.triggers,
       },
-      last_modified: new Date(1993, 1, 1).toISOString(),
+      last_modified: createUTCDate(1993, 1, 1).toISOString(),
     });
 
   return bundle;
