@@ -3,7 +3,6 @@ docs
 node_modules
 *.log
 .environment
-.env
 .idea
 .zapierapprc
 lib
