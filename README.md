@@ -31,7 +31,7 @@ Using the Kontent.ai integration, you only need to configure the Zap in Zapier. 
 The output of a trigger in Zapier is exactly what [Kontent.ai's webhook](https://kontent.ai/learn/reference/webhooks-reference) POSTs to Zapier. It will look something like this:
 
 ```js
-return {
+{
   data: {
     items: [
       {
@@ -115,7 +115,7 @@ Because the webhook notification from Kontent.ai only contains basic information
 Another useful example would be to translate language or workflow step IDs into codenames. The webhook notification contains IDs, but if you need to compare a language codename ("en-US") later on in the Zap, or if you're writing values to a Google Sheet and want to add the user-friendly name, you could add a __Find language__ step. You can search for the language via ID, and in the output you will find all the details of the language:
 
 ```js
-return {
+{
   id: '1c37a40c-9158-031d-9d2d-adf65a568cd6',
   name: 'Czech',
   codename: 'cz-CZ',
