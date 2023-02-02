@@ -43,6 +43,19 @@ describe("createContentItem", () => {
       .reply(200, rawContentType)
       .persist();
 
+    const expectedSnippetsRequest = client
+      .listContentTypeSnippets()
+
+    nock(expectedSnippetsRequest.getUrl())
+      .get("")
+    .reply(200, {
+      snippets: [], 
+      pagination: {
+        "continuation_token": null,
+        "next_page": null
+      }})
+      .persist();
+
     const expectedGetLanguageRequest = client
       .viewLanguage()
       .byLanguageId(rawLanguage.id);
@@ -71,6 +84,7 @@ describe("createContentItem", () => {
       .byItemId(itemId)
       .byLanguageId(rawLanguage.id)
       .withData(() => []);
+      
     nock(expectedCreateVariantRequest.getUrl())
       .put("", JSON.stringify(expectedCreateVariantRequest.data))
       .reply(201, {

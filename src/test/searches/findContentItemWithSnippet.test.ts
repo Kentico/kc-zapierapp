@@ -21,7 +21,7 @@ nock.disableNetConnect();
 afterEach(() => nock.cleanAll());
 
 describe("findContentItem", () => {
-  it("returns content item returned from the CM API found by id", async () => {
+  it("returns content item with snippet returned from the CM API found by id", async () => {
     const bundle: KontentBundle<
       Omit<InputData, "searchField" | "searchValue">
     > = addInputData(mockBundle, {
@@ -60,7 +60,7 @@ describe("findContentItem", () => {
     nock(expectedSnippetsRequest.getUrl())
       .get("")
     .reply(200, {
-      snippets: [], 
+      snippets: rawSnippets, 
       pagination: {
         "continuation_token": null,
         "next_page": null
@@ -147,6 +147,7 @@ describe("findContentItem", () => {
         {
           "elements": {
             "text": "greatText",
+            "text_snippet": "value snippet",
           },
           "modular_content": "[]",
           "system": {
@@ -180,6 +181,7 @@ describe("findContentItem", () => {
         {
           "elements": {
             "text": "greatText",
+            "text_snippet": "value snippet",
           },
           "modular_content": "[]",
           "system": {
@@ -213,6 +215,7 @@ describe("findContentItem", () => {
         {
           "elements": {
             "text": "greatText",
+            "text_snippet": "value snippet",
           },
           "modular_content": "[]",
           "system": {
@@ -246,6 +249,7 @@ describe("findContentItem", () => {
         {
           "elements": {
             "text": "greatText",
+            "text_snippet": "value snippet",
           },
           "modular_content": "[]",
           "system": {
@@ -306,8 +310,16 @@ const rawSnippets: ReadonlyArray<ContentTypeSnippetContracts.IContentTypeSnippet
   codename: 'content_snippet',
   last_modified: createUTCDate(1356, 12, 25).toISOString(),
   name: 'test content snippet',
-  elements: []
+  elements: [
+    {
+      id: "50702d62-b381-45bd-816e-57bf1ccd2de2",
+      type: "text",
+      name: "text element",
+      codename: "text_snippet",
+    },
+  ]
 }];
+
 
 const rawVariant: LanguageVariantContracts.IListLanguageVariantsOfItemResponseContract =
   {
@@ -326,6 +338,13 @@ const rawVariant: LanguageVariantContracts.IListLanguageVariantsOfItemResponseCo
         },
         value: "greatText",
       },
+      {
+        element: {
+            id: "50702d62-b381-45bd-816e-57bf1ccd2de2",
+            codename: "text_snippet",
+        },
+        value: "value snippet"
+      }
     ],
   };
 

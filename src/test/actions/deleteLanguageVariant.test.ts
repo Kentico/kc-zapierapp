@@ -39,14 +39,28 @@ describe("deleteLanguageVariant", () => {
       .viewLanguageVariant()
       .byItemId(rawVariant.item.id || "")
       .byLanguageId(rawVariant.language.id || "");
+
     nock(expectedVariantRequest.getUrl())
       .get("")
       .reply(200, rawVariant)
       .persist();
 
+    const expectedSnippetsRequest = client.listContentTypeSnippets()
+
+    nock(expectedSnippetsRequest.getUrl())
+      .get("")
+      .reply(200, {
+      snippets: [], 
+      pagination: {
+        "continuation_token": null,
+        "next_page": null
+      }})
+      .persist();
+
     const expectedLanguageRequest = client
       .viewLanguage()
       .byLanguageId(rawLanguage.id);
+
     nock(expectedLanguageRequest.getUrl())
       .get("")
       .reply(200, rawLanguage)
