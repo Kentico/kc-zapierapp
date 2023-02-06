@@ -108,7 +108,7 @@ describe("findContentItem", () => {
       previewApiKey: "someKey",
     })
       .itemsFeed()
-      .withParameter({ getParam: () => `elements.text=greatText` })
+      .withParameter({ getParam: () => `elements.text_snippet=value snippet` })
       .types([rawContentType.codename])
       .queryConfig({ usePreviewMode: true })
       .limitParameter(1)
@@ -239,8 +239,8 @@ describe("findContentItem", () => {
     const byElementResult = await appTester(
       search,
       addInputData(bundle, {
-        searchField: "elements.text",
-        searchValue: rawVariant.elements[0]?.value.toString() ?? "",
+        searchField: "elements.text_snippet",
+        searchValue: rawVariant.elements[1]?.value.toString() ?? "",
       })
     );
 
@@ -284,6 +284,12 @@ const rawContentType: ContentTypeContracts.IContentTypeContract = {
       name: "text element",
       codename: "text",
     },
+    {
+      id:"1e3e3269-6f82-43e0-8304-95653508b90e",
+      type:"snippet",
+      name:"content snippet",
+      codename:"content_snippet"
+    }
   ],
 };
 
@@ -360,24 +366,16 @@ const rawDeliveryItem: Contracts.IContentItemContract = {
     last_modified: rawVariant.last_modified,
     sitemap_locations: [],
   },
-  elements: Object.fromEntries(
-    rawContentType.elements.flatMap((typeElement) => {
-      const variantElement = rawVariant.elements.find(
-        (el) => el.element.id === typeElement.id
-      );
-
-      return variantElement
-        ? [
-            [
-              typeElement.codename,
-              {
-                type: typeElement.type,
-                name: typeElement.name,
-                value: variantElement.value,
-              },
-            ] as const,
-          ]
-        : [];
-    })
-  ),
+  elements: {
+    text_snippet: {
+      name: "Text Snippet",
+      type: "text",
+      value: "value snippet"
+    },
+    text: {
+      name: "text element",
+      type: "text",
+      value: "greatText"
+    }
+  }
 };

@@ -301,14 +301,6 @@ const rawLanguage: LanguageContracts.ILanguageModelContract = {
   is_default: true,
 };
 
-const rawSnippets: ReadonlyArray<ContentTypeSnippetContracts.IContentTypeSnippetContract> = [{
-  id:"1e3e3269-6f82-43e0-8304-95653508b90e",
-  codename: 'content_snippet',
-  last_modified: createUTCDate(1356, 12, 25).toISOString(),
-  name: 'test content snippet',
-  elements: []
-}];
-
 const rawVariant: LanguageVariantContracts.IListLanguageVariantsOfItemResponseContract =
   {
     item: rawContentItem,

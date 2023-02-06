@@ -76,8 +76,8 @@ const getElements = (
     .flatMap(element => {
       const typeElement = contentType.elements.find(el => el.id === element.element.id) 
       || contentTypeSnippets
-      .find(snippet => snippet.elements.find(el => el.id === element.element.id))?.elements
-      .find(el => el.id === element.element.id)
+          .find(snippet => snippet.elements.find(el => el.id === element.element.id))?.elements
+          .find(el => el.id === element.element.id);
       
       if (!typeElement || typeElement.type === 'guidelines') {
         return [];
