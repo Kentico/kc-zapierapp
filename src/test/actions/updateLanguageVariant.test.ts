@@ -17,6 +17,7 @@ import {
   updateLanguageVariant,
 } from "../../actions/updateLanguageVariant";
 import { createUTCDate } from "../utils/date";
+import { mockSnippetsRequest } from "../utils/mockSnippetsRequest";
 
 const appTester = createAppTester(App);
 nock.disableNetConnect();
@@ -51,18 +52,7 @@ describe("updateLanguageVariant", () => {
       .reply(200, rawVariant)
       .persist();
 
-    const expectedSnippetsRequest = client
-      .listContentTypeSnippets()
-
-    nock(expectedSnippetsRequest.getUrl())
-      .get("")
-    .reply(200, {
-      snippets: [], 
-      pagination: {
-        "continuation_token": null,
-        "next_page": null
-      }})
-      .persist();
+    mockSnippetsRequest(client);
 
     const expectedLanguageRequest = client
       .viewLanguage()

@@ -14,6 +14,7 @@ import { LanguageVariantContracts } from "@kontent-ai/management-sdk/lib/contrac
 import { Contracts, DeliveryClient } from "@kontent-ai/delivery-sdk";
 import findContentItem, { InputData } from "../../searches/findContentItem";
 import { createUTCDate } from "../utils/date";
+import { mockSnippetsRequest } from "../utils/mockSnippetsRequest";
 
 const appTester = createAppTester(App);
 nock.disableNetConnect();
@@ -54,18 +55,7 @@ describe("findContentItem", () => {
       .reply(200, rawLanguage)
       .persist();
 
-    const expectedSnippetsRequest = managementClient
-      .listContentTypeSnippets()
-
-    nock(expectedSnippetsRequest.getUrl())
-      .get("")
-    .reply(200, {
-      snippets: [], 
-      pagination: {
-        "continuation_token": null,
-        "next_page": null
-      }})
-      .persist();
+    mockSnippetsRequest(managementClient);
         
     const expectedItemByIdQuery = managementClient
       .viewContentItem()
