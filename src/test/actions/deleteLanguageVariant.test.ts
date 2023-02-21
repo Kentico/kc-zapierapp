@@ -15,6 +15,8 @@ import {
   InputData,
 } from "../../actions/deleteLanguageVariant";
 import { createUTCDate } from "../utils/date";
+import { mockSnippetsRequest } from "../utils/mockSnippetsRequest";
+import { mockLanguageRequest } from "../utils/mockLanguageRequest";
 
 const appTester = createAppTester(App);
 nock.disableNetConnect();
@@ -39,18 +41,15 @@ describe("deleteLanguageVariant", () => {
       .viewLanguageVariant()
       .byItemId(rawVariant.item.id || "")
       .byLanguageId(rawVariant.language.id || "");
+
     nock(expectedVariantRequest.getUrl())
       .get("")
       .reply(200, rawVariant)
       .persist();
 
-    const expectedLanguageRequest = client
-      .viewLanguage()
-      .byLanguageId(rawLanguage.id);
-    nock(expectedLanguageRequest.getUrl())
-      .get("")
-      .reply(200, rawLanguage)
-      .persist();
+    mockSnippetsRequest(client);
+
+    mockLanguageRequest(client, rawLanguage);
 
     const expectedContentTypeRequest = client
       .viewContentType()

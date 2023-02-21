@@ -8,10 +8,12 @@ import {
   ContentItemModels,
   ContentTypeElements,
   ContentTypeModels,
+  ContentTypeSnippetModels,
   ElementModels,
   LanguageVariantModels,
   SharedModels,
 } from '@kontent-ai/management-sdk';
+import { getContentTypeSnippets } from '../../types/getContentTypeSnippets';
 
 async function findContentItemByIdentifier(z: ZObject, bundle: KontentBundle<{}>, languageId: string, itemId: string) {
   const item = await findItemByIdentifier(z, bundle, 'id', itemId);
@@ -63,13 +65,24 @@ function getElementValue(element: ElementModels.ContentItemElement, typeElement:
   }
 }
 
-const getElements = (z: ZObject, bundle: KontentBundle<{}>, variant: LanguageVariantModels.ContentItemLanguageVariant, contentType: ContentTypeModels.ContentType) =>
+const getElements = (
+  z: ZObject, 
+  bundle: KontentBundle<{}>, 
+  variant: LanguageVariantModels.ContentItemLanguageVariant, 
+  contentType: ContentTypeModels.ContentType, 
+  contentTypeSnippets: ContentTypeSnippetModels.ContentTypeSnippet[]
+) =>
   Object.fromEntries(variant.elements
     .flatMap(element => {
-      const typeElement = contentType.elements.find(el => el.id === element.element.id);
+      const typeElement = contentType.elements.find(el => el.id === element.element.id) 
+      || contentTypeSnippets
+          .find(snippet => snippet.elements.find(el => el.id === element.element.id))?.elements
+          .find(el => el.id === element.element.id);
+      
       if (!typeElement || typeElement.type === 'guidelines') {
         return [];
       }
+
       return [
         // bad SDK types, even snippet element should have codename
         [
@@ -96,7 +109,8 @@ async function getLinkedItems(z: ZObject, bundle: KontentBundle<{}>, variant: La
 export async function getItemResult(z: ZObject, bundle: KontentBundle<{}>, item: ContentItemModels.ContentItem, variant: LanguageVariantModels.ContentItemLanguageVariant, doModular = true): Promise<ItemResult> {
   const contentType = await getContentType(z, bundle, item.type.id);
   const language = await getLanguage(z, bundle, variant.language.id || '');
-  const elements = getElements(z, bundle, variant, contentType);
+  const contentTypeSnippets = await getContentTypeSnippets(z, bundle);
+  const elements = getElements(z, bundle, variant, contentType, contentTypeSnippets);
 
   //get modular content and set doModular to false in order prevent too much depth
   const modular = doModular

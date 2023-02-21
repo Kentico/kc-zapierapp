@@ -23,7 +23,7 @@ nock.disableNetConnect();
 afterEach(() => nock.cleanAll());
 
 describe("findContentItem", () => {
-  it("returns content item returned from the CM API found by id", async () => {
+  it("returns content item with snippet returned from the CM API found by id", async () => {
     const bundle: KontentBundle<
       Omit<InputData, "searchField" | "searchValue">
     > = addInputData(mockBundle, {
@@ -49,7 +49,7 @@ describe("findContentItem", () => {
 
     mockLanguageRequest(managementClient, rawLanguage);
 
-    mockSnippetsRequest(managementClient);
+    mockSnippetsRequest(managementClient, rawSnippets);
         
     const expectedItemByIdQuery = managementClient
       .viewContentItem()
@@ -92,7 +92,7 @@ describe("findContentItem", () => {
       previewApiKey: "someKey",
     })
       .itemsFeed()
-      .withParameter({ getParam: () => `elements.text=greatText` })
+      .withParameter({ getParam: () => `elements.text_snippet=value snippet` })
       .types([rawContentType.codename])
       .queryConfig({ usePreviewMode: true })
       .limitParameter(1)
@@ -131,6 +131,7 @@ describe("findContentItem", () => {
         {
           "elements": {
             "text": "greatText",
+            "text_snippet": "value snippet",
           },
           "modular_content": "[]",
           "system": {
@@ -164,6 +165,7 @@ describe("findContentItem", () => {
         {
           "elements": {
             "text": "greatText",
+            "text_snippet": "value snippet",
           },
           "modular_content": "[]",
           "system": {
@@ -197,6 +199,7 @@ describe("findContentItem", () => {
         {
           "elements": {
             "text": "greatText",
+            "text_snippet": "value snippet",
           },
           "modular_content": "[]",
           "system": {
@@ -220,8 +223,8 @@ describe("findContentItem", () => {
     const byElementResult = await appTester(
       search,
       addInputData(bundle, {
-        searchField: "elements.text",
-        searchValue: rawVariant.elements[0]?.value.toString() ?? "",
+        searchField: "elements.text_snippet",
+        searchValue: rawVariant.elements[1]?.value.toString() ?? "",
       })
     );
 
@@ -230,6 +233,7 @@ describe("findContentItem", () => {
         {
           "elements": {
             "text": "greatText",
+            "text_snippet": "value snippet",
           },
           "modular_content": "[]",
           "system": {
@@ -264,6 +268,12 @@ const rawContentType: ContentTypeContracts.IContentTypeContract = {
       name: "text element",
       codename: "text",
     },
+    {
+      id:"1e3e3269-6f82-43e0-8304-95653508b90e",
+      type:"snippet",
+      name:"content snippet",
+      codename:"content_snippet"
+    }
   ],
 };
 
@@ -285,6 +295,22 @@ const rawLanguage: LanguageContracts.ILanguageModelContract = {
   is_default: true,
 };
 
+const rawSnippets: ReadonlyArray<ContentTypeSnippetContracts.IContentTypeSnippetContract> = [{
+  id:"1e3e3269-6f82-43e0-8304-95653508b90e",
+  codename: 'content_snippet',
+  last_modified: createUTCDate(1356, 12, 25).toISOString(),
+  name: 'test content snippet',
+  elements: [
+    {
+      id: "50702d62-b381-45bd-816e-57bf1ccd2de2",
+      type: "text",
+      name: "text element",
+      codename: "text_snippet",
+    },
+  ]
+}];
+
+
 const rawVariant: LanguageVariantContracts.IListLanguageVariantsOfItemResponseContract =
   {
     item: rawContentItem,
@@ -302,6 +328,13 @@ const rawVariant: LanguageVariantContracts.IListLanguageVariantsOfItemResponseCo
         },
         value: "greatText",
       },
+      {
+        element: {
+            id: "50702d62-b381-45bd-816e-57bf1ccd2de2",
+            codename: "text_snippet",
+        },
+        value: "value snippet"
+      }
     ],
   };
 
@@ -317,24 +350,16 @@ const rawDeliveryItem: Contracts.IContentItemContract = {
     last_modified: rawVariant.last_modified,
     sitemap_locations: [],
   },
-  elements: Object.fromEntries(
-    rawContentType.elements.flatMap((typeElement) => {
-      const variantElement = rawVariant.elements.find(
-        (el) => el.element.id === typeElement.id
-      );
-
-      return variantElement
-        ? [
-            [
-              typeElement.codename,
-              {
-                type: typeElement.type,
-                name: typeElement.name,
-                value: variantElement.value,
-              },
-            ] as const,
-          ]
-        : [];
-    })
-  ),
+  elements: {
+    text_snippet: {
+      name: "Text Snippet",
+      type: "text",
+      value: "value snippet"
+    },
+    text: {
+      name: "text element",
+      type: "text",
+      value: "greatText"
+    }
+  }
 };

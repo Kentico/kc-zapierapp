@@ -12,6 +12,7 @@ import App from "../../index";
 import { KontentBundle } from "../../types/kontentBundle";
 import { createContentItem, InputData } from "../../actions/createContentItem";
 import { createUTCDate } from "../utils/date";
+import { mockSnippetsRequest } from "../utils/mockSnippetsRequest";
 
 const appTester = createAppTester(App);
 nock.disableNetConnect();
@@ -43,6 +44,8 @@ describe("createContentItem", () => {
       .reply(200, rawContentType)
       .persist();
 
+    mockSnippetsRequest(client);
+
     const expectedGetLanguageRequest = client
       .viewLanguage()
       .byLanguageId(rawLanguage.id);
@@ -71,6 +74,7 @@ describe("createContentItem", () => {
       .byItemId(itemId)
       .byLanguageId(rawLanguage.id)
       .withData(() => []);
+      
     nock(expectedCreateVariantRequest.getUrl())
       .put("", JSON.stringify(expectedCreateVariantRequest.data))
       .reply(201, {

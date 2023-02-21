@@ -23,5 +23,5 @@ const getSnippetElements = (managementClient: ManagementClient, element: Content
     .toPromise()
     .then(res => res.data.elements.map(el => ({
       ...el,
-      codename: `${res.data.codename}__${(el as Exclude<typeof el, ContentTypeElements.ISnippetElement>).codename}`, // type override is because of MAPI SDK bad types, snippet cannot contain snippet element
+      codename: (el as Exclude<typeof el, ContentTypeElements.ISnippetElement>).codename ?? '', // type override is because of MAPI SDK bad types, snippet cannot contain snippet element
     })));
