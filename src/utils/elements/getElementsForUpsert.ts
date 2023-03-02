@@ -29,33 +29,21 @@ const getElementValue = (value: RawElementValue, element: ContentTypeElements.Co
     }
 
     case 'modular_content':
-      if (!Array.isArray(value)) {
-        return value;
-      }
-      return value.map(item => {
-        //try to determine if it's an ID or external ID
-        return item.length == 36 && (item.match(/-/g) || []).length === 4
-          ? { id: item }
-          : { external_id: item };
-      });
+      return parseList(value)
+        ?.map(x => isInternalId(x)
+          ? { id: x }
+          : { external_id: x }
+        );
 
     case 'multiple_choice':
     case 'asset':
-    case 'taxonomy': {
-      if (!Array.isArray(value)) {
-        return value;
-      }
-
-      return value.map(item => {
-        //try to determine if it's an ID or codename
-        if (item.length == 36 && (item.match(/-/g) || []).length === 4) {
-          return { id: item };
-        }
-        else {
-          return { codename: item };
-        }
-      });
-    }
+    case 'taxonomy':
+      return parseList(value)
+        ?.map(x =>
+          isInternalId(x)
+            ? { id: x }
+            : { codename: x }
+        );
 
     case 'guidelines':
     default:
@@ -97,3 +85,19 @@ export type ExpectedInputData = ElementFields;
 
 const notUndefined = <T>(v: T | undefined): v is T =>
   v !== undefined;
+
+// It would be nice to change this, but we can't without a breaking change. Please change this api once you introduce some breaking change.
+const isInternalId = (possibleId: string) =>
+  possibleId.length == 36 && (possibleId.match(/-/g) || []).length === 4;
+
+const parseList = (value: RawElementValue): undefined | readonly string[] => {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+  const firstElement = value[0];
+
+  // This behaviour (if exactly one element it is a comma-separated string of elements) is not pretty either. Again, I want to avoid breaking changes at the moment, but it would be nice to get rid of it in the future.
+  return value.length === 1 && firstElement
+    ? firstElement.split(',').map(v => v.trim())
+    : value;
+}
