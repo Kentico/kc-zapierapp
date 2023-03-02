@@ -3,7 +3,6 @@ import { KontentBundle } from '../../types/kontentBundle';
 import { getContentTypeElements } from './getContentTypeElements';
 import { ContentTypeElements } from '@kontent-ai/management-sdk';
 import { Field } from '../field';
-import { getLinkedItemField } from '../getLinkedItemField';
 
 export const getItemElementFields = async (z: ZObject, bundle: KontentBundle<{}>, contentTypeId: string) =>
   getContentTypeElements(z, bundle, contentTypeId)
@@ -27,9 +26,21 @@ function getSimpleElementField(element: ContentTypeElements.ContentTypeElementMo
       return getField(element, { type: 'datetime' });
 
     case 'modular_content':
-      return getLinkedItemField(getField(element));
+      const opts = {
+        search: 'find_item.id',
+        list: true,
+        dynamic: 'get_linked_items.id.name',
+        type: 'string',
+        altersDynamicFields: false,
+      } as const;
 
-    case 'multiple_choice':
+      return getField(element, opts);
+
+    case 'multiple_choice': {
+      const choices = element.options.map(o => ({ label: o.name, value: o.codename || '', sample: '' }));
+
+      return getField(element, { type: 'unicode', list: element.mode === 'multiple', choices });
+    }
     case 'asset':
     case 'taxonomy':
       return getField(element, { type: 'unicode', list: true });
@@ -52,16 +63,8 @@ function getField(element: ElementWithoutSnippets, extra?: Partial<Field>) {
     required: element.type !== 'guidelines' && !!element.is_required,
   };
 
-  const choices = element.type === 'multiple_choice'
-    ? element.options.map(o => ({ label: o.name, value: o.codename || '', sample: '' }))
-    : undefined;
-
-  const list = element.type === 'multiple_choice' ? false : undefined;
-
   return {
     ...base,
-    choices,
-    list,
     ...extra,
   };
 }
