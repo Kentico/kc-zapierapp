@@ -10,6 +10,9 @@ type RawElementValue = string | string[] | number | undefined;
 const getElementValue = (value: RawElementValue, element: ContentTypeElements.ContentTypeElementModel): ElementValue => {
   switch (element.type) {
     case 'rich_text': {
+      if (typeof value !== 'string') {
+        return undefined;
+      }
       if (typeof value === 'string' && value.trim().startsWith('<')) {
         return value;
       }
@@ -22,7 +25,7 @@ const getElementValue = (value: RawElementValue, element: ContentTypeElements.Co
     case 'date_time':
     case 'url_slug': {
       if (Array.isArray(value)) {
-        throw new Error(`Invalid value of type array for element of type ${element.type}.`);
+        return undefined;
       }
 
       return value;
