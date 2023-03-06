@@ -4,3 +4,5 @@ node_modules
 .environment
 .idea
 lib
+.DS_Store
+.vscode
