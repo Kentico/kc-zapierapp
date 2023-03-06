@@ -82,14 +82,15 @@ const getElementName = (element: ElementWithoutSnippets): string => {
 };
 
 const createElementHelpText = (element: ElementWithoutSnippets): string | undefined => {
+  const guidelines = element.guidelines ?? '';
   switch (element.type) {
     case 'modular_content':
-      return element.guidelines + ' The value of this field should be a comma-separated list of content item IDs or [external IDs](https://kontent.ai/learn/reference/management-api-v2/#section/Reference-object), or a single value on each line.';
+      return guidelines + ' The value of this field should be a comma-separated list of content item IDs or [external IDs](https://kontent.ai/learn/reference/management-api-v2/#section/Reference-object), or a single value on each line.';
     case 'multiple_choice':
     case 'asset':
     case 'taxonomy':
-      return element.guidelines + ' The value of this field should be a comma-separated list of IDs or codenames, or a single value on each line.';
+      return guidelines + ' The value of this field should be a comma-separated list of IDs or codenames, or a single value on each line.';
     default:
-      return element.guidelines;
+      return guidelines
   }
 };
