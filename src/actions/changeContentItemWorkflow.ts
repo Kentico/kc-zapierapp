@@ -126,7 +126,6 @@ const execute = async (z: ZObject, bundle: KontentBundle<InputData>): Promise<Ou
   }
 
   const workflowStepId = bundle.inputData.workflowStepIds;
-  z.console.log(bundle.inputData.workflowStepIds);
   if (!workflowStepId) {
     throw new Error('Missing target workflow step ID');
   }
