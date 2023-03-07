@@ -42,10 +42,9 @@ const getElementValue = (value: RawElementValue, element: ContentTypeElements.Co
     case 'asset':
     case 'taxonomy':
       return parseList(value)
-        ?.map(x =>
-          isInternalId(x)
-            ? { id: x }
-            : { codename: x }
+        ?.map(x => isInternalId(x)
+          ? { id: x }
+          : { codename: x }
         );
 
     case 'guidelines':
@@ -89,9 +88,9 @@ export type ExpectedInputData = ElementFields;
 const notUndefined = <T>(v: T | undefined): v is T =>
   v !== undefined;
 
+const internalIdRegex = /[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/;
 // It would be nice to change this, but we can't without a breaking change. Please change this api once you introduce some breaking change.
-const isInternalId = (possibleId: string) =>
-  possibleId.length == 36 && (possibleId.match(/-/g) || []).length === 4;
+const isInternalId = (possibleId: string): boolean => internalIdRegex.test(possibleId);
 
 const parseList = (value: RawElementValue): undefined | readonly string[] => {
   if (!Array.isArray(value)) {
