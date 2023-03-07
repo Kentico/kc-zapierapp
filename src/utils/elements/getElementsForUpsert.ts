@@ -13,7 +13,7 @@ const getElementValue = (value: RawElementValue, element: ContentTypeElements.Co
       if (typeof value !== 'string') {
         return undefined;
       }
-      if (typeof value === 'string' && value.trim().startsWith('<')) {
+      if (value.trim().startsWith('<')) {
         return value;
       }
       return `<p>${value}</p>`;
