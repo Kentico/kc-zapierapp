@@ -21,12 +21,14 @@ const getTermsForTaxonomyElements = (z: ZObject, bundle: KontentBundle<{}>) =>
 type TermData = Readonly<{
   id: string;
   name: string;
+  codename: string;
 }>;
 
 const createTermData = (term: TaxonomyModels.Taxonomy): ReadonlyArray<TermData> => [
   {
     id: term.id,
     name: term.name,
+    codename: term.codename,
   },
   ...term.terms.flatMap(createTermData),
 ];
@@ -69,10 +71,11 @@ const getSimpleElementField = (termsByElementId: ReadonlyMap<string, readonly Te
         return getField(element, { type: 'unicode', list: true });
 
       case 'taxonomy': {
-        const choices = (termsByElementId.get(element.id) ?? [])
-          .map(t => ({ value: t.id, label: t.name, sample: t.id }));
+        const terms = termsByElementId.get(element.id) ?? [];
+        const idChoices = terms.map(t => ({ value: t.id, label: t.name, sample: t.id }));
+        const codenameChoices = terms.map(t => ({ value: t.codename, label: `${t.name} (codename)`, sample: t.codename }));
 
-        return getField(element, { type: 'unicode', choices, list: true });
+        return getField(element, { type: 'unicode', choices: [...idChoices, ...codenameChoices], list: true });
       }
 
       case 'url_slug':
