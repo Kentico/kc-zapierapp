@@ -5,6 +5,6 @@ import { createDeliveryClient } from '../kontentServices/deliverClient';
 export const getContentTypes = async (z: ZObject, bundle: KontentBundle<{}>) =>
   createDeliveryClient(z, bundle)
     .types()
-    .queryConfig({ usePreviewMode: true })
+    .queryConfig({ usePreviewMode: true, useSecuredMode: false })
     .toAllPromise()
     .then(res => res.data.items);

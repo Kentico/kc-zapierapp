@@ -42,7 +42,7 @@ async function findContentItemByElement(z: ZObject, bundle: KontentBundle<Expect
     .itemsFeed()
     .withParameters(searchParams.map(([paramKey, paramValue]) => ({ getParam: () => `${paramKey}=${paramValue}` })))
     .types(contentTypeCodename ? [contentTypeCodename] : [])
-    .queryConfig({ usePreviewMode: true })
+    .queryConfig({ usePreviewMode: true, useSecuredMode: false })
     .limitParameter(1);
 
   const query = languageCode
