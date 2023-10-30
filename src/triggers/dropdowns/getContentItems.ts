@@ -14,7 +14,7 @@ const execute = async (z: ZObject, bundle: KontentBundle<{}>): Promise<Output> =
 
   return createDeliveryClient(z, bundle)
     .items()
-    .queryConfig({ usePreviewMode: true })
+    .queryConfig({ usePreviewMode: true, useSecuredMode: false })
     .limitParameter(10)
     .skipParameter(10 * bundle.meta.page)
     .depthParameter(0)

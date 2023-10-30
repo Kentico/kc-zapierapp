@@ -50,7 +50,7 @@ describe("findContentItem", () => {
     mockLanguageRequest(managementClient, rawLanguage);
 
     mockSnippetsRequest(managementClient);
-        
+
     const expectedItemByIdQuery = managementClient
       .viewContentItem()
       .byItemId(rawContentItem.id);
@@ -115,7 +115,7 @@ describe("findContentItem", () => {
       )
       .reply(200, { items: [rawDeliveryItem], modular_content: {} });
 
-  
+
     const search = App.searches[findContentItem.key].operation.perform;
 
     const byIdResult = await appTester(
@@ -125,7 +125,7 @@ describe("findContentItem", () => {
         searchValue: rawContentItem.id,
       })
     );
-    
+
     expect(byIdResult).toMatchInlineSnapshot(`
       [
         {
@@ -286,24 +286,24 @@ const rawLanguage: LanguageContracts.ILanguageModelContract = {
 };
 
 const rawVariant: LanguageVariantContracts.IListLanguageVariantsOfItemResponseContract =
-  {
-    item: rawContentItem,
-    language: rawLanguage,
-    last_modified: createUTCDate(1230, 12, 15).toISOString(),
-    workflow_step: {
-      id: "89205fc8-bf8e-4bc3-9eb2-725c9623ef40",
-      codename: "draft",
-    },
-    elements: [
-      {
-        element: {
-          id: "50702d62-b381-45bd-816e-57bf1ccd2de6",
-          codename: "text",
-        },
-        value: "greatText",
+{
+  item: rawContentItem,
+  language: rawLanguage,
+  last_modified: createUTCDate(1230, 12, 15).toISOString(),
+  workflow_step: {
+    id: "89205fc8-bf8e-4bc3-9eb2-725c9623ef40",
+    codename: "draft",
+  },
+  elements: [
+    {
+      element: {
+        id: "50702d62-b381-45bd-816e-57bf1ccd2de6",
+        codename: "text",
       },
-    ],
-  };
+      value: "greatText",
+    },
+  ],
+};
 
 const rawDeliveryItem: Contracts.IContentItemContract = {
   system: {
@@ -325,15 +325,15 @@ const rawDeliveryItem: Contracts.IContentItemContract = {
 
       return variantElement
         ? [
-            [
-              typeElement.codename,
-              {
-                type: typeElement.type,
-                name: typeElement.name,
-                value: variantElement.value,
-              },
-            ] as const,
-          ]
+          [
+            typeElement.codename,
+            {
+              type: typeElement.type,
+              name: typeElement.name,
+              value: variantElement.value,
+            },
+          ] as const,
+        ]
         : [];
     })
   ),

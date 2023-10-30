@@ -6,7 +6,8 @@ import { createDeliveryClient } from './utils/kontentServices/deliverClient';
 const execute = (z: ZObject, bundle: KontentBundle<{}>) =>
   Promise.all([
     checkCmApi(z, bundle),
-    checkPreviewApi(z, bundle),
+    checkPublicDeliveryApi(z, bundle),
+    checkPreviewDeliveryApi(z, bundle),
   ])
     .then(([{ name }]) => ({ projectName: name }));
 
@@ -52,7 +53,16 @@ const checkCmApi = (z: ZObject, bundle: KontentBundle<{}>) =>
     .toPromise()
     .then(res => res.data.project);
 
-const checkPreviewApi = (z: ZObject, bundle: KontentBundle<{}>) =>
+const checkPublicDeliveryApi = (z: ZObject, bundle: KontentBundle<{}>) =>
   createDeliveryClient(z, bundle)
     .types()
+    .toPromise();
+
+const checkPreviewDeliveryApi = (z: ZObject, bundle: KontentBundle<{}>) =>
+  createDeliveryClient(z, bundle)
+    .types()
+    .queryConfig({
+      usePreviewMode: true,
+      useSecuredMode: false,
+    })
     .toPromise();
