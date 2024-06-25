@@ -4,7 +4,6 @@ import { addInputData, mockBundle } from "../utils/mockBundle";
 import {
   ContentItemContracts,
   ContentTypeContracts,
-  ContentTypeSnippetContracts,
   LanguageContracts,
   ManagementClient,
 } from "@kontent-ai/management-sdk";
@@ -88,7 +87,7 @@ describe("findContentItem", () => {
       .persist();
 
     const expectedItemByElementQuery = new DeliveryClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       previewApiKey: "someKey",
     })
       .itemsFeed()
@@ -314,6 +313,7 @@ const rawDeliveryItem: Contracts.IContentItemContract = {
     language: rawLanguage.codename,
     collection: "default",
     workflow_step: rawVariant.workflow_step.codename || "",
+    workflow: null,
     last_modified: rawVariant.last_modified,
     sitemap_locations: [],
   },

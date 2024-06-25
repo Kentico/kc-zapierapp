@@ -50,7 +50,7 @@ describe("findContentItem", () => {
     mockLanguageRequest(managementClient, rawLanguage);
 
     mockSnippetsRequest(managementClient, rawSnippets);
-        
+
     const expectedItemByIdQuery = managementClient
       .viewContentItem()
       .byItemId(rawContentItem.id);
@@ -88,7 +88,7 @@ describe("findContentItem", () => {
       .persist();
 
     const expectedItemByElementQuery = new DeliveryClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       previewApiKey: "someKey",
     })
       .itemsFeed()
@@ -115,7 +115,7 @@ describe("findContentItem", () => {
       )
       .reply(200, { items: [rawDeliveryItem], modular_content: {} });
 
-  
+
     const search = App.searches[findContentItem.key].operation.perform;
 
     const byIdResult = await appTester(
@@ -125,7 +125,7 @@ describe("findContentItem", () => {
         searchValue: rawContentItem.id,
       })
     );
-    
+
     expect(byIdResult).toMatchInlineSnapshot(`
       [
         {
@@ -269,10 +269,10 @@ const rawContentType: ContentTypeContracts.IContentTypeContract = {
       codename: "text",
     },
     {
-      id:"1e3e3269-6f82-43e0-8304-95653508b90e",
-      type:"snippet",
-      name:"content snippet",
-      codename:"content_snippet"
+      id: "1e3e3269-6f82-43e0-8304-95653508b90e",
+      type: "snippet",
+      name: "content snippet",
+      codename: "content_snippet"
     }
   ],
 };
@@ -296,7 +296,7 @@ const rawLanguage: LanguageContracts.ILanguageModelContract = {
 };
 
 const rawSnippets: ReadonlyArray<ContentTypeSnippetContracts.IContentTypeSnippetContract> = [{
-  id:"1e3e3269-6f82-43e0-8304-95653508b90e",
+  id: "1e3e3269-6f82-43e0-8304-95653508b90e",
   codename: 'content_snippet',
   last_modified: createUTCDate(1356, 12, 25).toISOString(),
   name: 'test content snippet',
@@ -312,31 +312,31 @@ const rawSnippets: ReadonlyArray<ContentTypeSnippetContracts.IContentTypeSnippet
 
 
 const rawVariant: LanguageVariantContracts.IListLanguageVariantsOfItemResponseContract =
-  {
-    item: rawContentItem,
-    language: rawLanguage,
-    last_modified: createUTCDate(1230, 12, 15).toISOString(),
-    workflow_step: {
-      id: "89205fc8-bf8e-4bc3-9eb2-725c9623ef40",
-      codename: "draft",
-    },
-    elements: [
-      {
-        element: {
-          id: "50702d62-b381-45bd-816e-57bf1ccd2de6",
-          codename: "text",
-        },
-        value: "greatText",
+{
+  item: rawContentItem,
+  language: rawLanguage,
+  last_modified: createUTCDate(1230, 12, 15).toISOString(),
+  workflow_step: {
+    id: "89205fc8-bf8e-4bc3-9eb2-725c9623ef40",
+    codename: "draft",
+  },
+  elements: [
+    {
+      element: {
+        id: "50702d62-b381-45bd-816e-57bf1ccd2de6",
+        codename: "text",
       },
-      {
-        element: {
-            id: "50702d62-b381-45bd-816e-57bf1ccd2de2",
-            codename: "text_snippet",
-        },
-        value: "value snippet"
-      }
-    ],
-  };
+      value: "greatText",
+    },
+    {
+      element: {
+        id: "50702d62-b381-45bd-816e-57bf1ccd2de2",
+        codename: "text_snippet",
+      },
+      value: "value snippet"
+    }
+  ],
+};
 
 const rawDeliveryItem: Contracts.IContentItemContract = {
   system: {
@@ -347,6 +347,7 @@ const rawDeliveryItem: Contracts.IContentItemContract = {
     language: rawLanguage.codename,
     collection: "default",
     workflow_step: rawVariant.workflow_step.codename || "",
+    workflow: null,
     last_modified: rawVariant.last_modified,
     sitemap_locations: [],
   },

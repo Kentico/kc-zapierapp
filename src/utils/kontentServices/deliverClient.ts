@@ -5,7 +5,7 @@ import { createHttpService } from './httpService';
 
 export const createDeliveryClient = (z: ZObject, bundle: KontentBundle<{}>) =>
   new DeliveryClient({
-    projectId: bundle.authData.projectId,
+    environmentId: bundle.authData.projectId,
     secureApiKey: bundle.authData.secureApiKey,
     httpService: createHttpService(z),
     previewApiKey: bundle.authData.previewApiKey,

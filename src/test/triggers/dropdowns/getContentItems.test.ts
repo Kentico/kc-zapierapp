@@ -22,7 +22,7 @@ describe("getContentItems", () => {
     };
 
     const expectedRequest = new DeliveryClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       previewApiKey: "previewAPIKey",
     })
       .items()
@@ -44,6 +44,7 @@ describe("getContentItems", () => {
             collection: "default",
             language: languages[0].codename,
             workflow_step: "draft",
+            workflow: "default",
             sitemap_locations: [],
           },
           elements: {},
@@ -58,6 +59,7 @@ describe("getContentItems", () => {
             collection: "some_collection",
             language: languages[1].codename,
             workflow_step: null,
+            workflow: null,
             sitemap_locations: ["9e647f7c-51c1-4186-9901-2ff41470ffe8"],
           },
           elements: {},

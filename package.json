@@ -11,7 +11,7 @@
     "zapier-login": "zapier login"
   },
   "dependencies": {
-    "@kontent-ai/delivery-sdk": "^12.4.0",
+    "@kontent-ai/delivery-sdk": "^14.9.0",
     "@kontent-ai/management-sdk": "^3.4.0",
     "zapier-platform-core": "15.8.0"
   },

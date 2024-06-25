@@ -35,7 +35,7 @@ describe("Zapier authentication", () => {
       }));
 
     const expectedDeliveryRequest = new DeliveryClient({
-      projectId: authData.projectId,
+      environmentId: authData.projectId,
       previewApiKey: authData.previewApiKey,
       secureApiKey: authData.secureApiKey,
       defaultQueryConfig: {
@@ -49,7 +49,7 @@ describe("Zapier authentication", () => {
       .reply(200, JSON.stringify({ types: [], pagination: {} }));
 
     const expectedPreviewRequest = new DeliveryClient({
-      projectId: authData.projectId,
+      environmentId: authData.projectId,
       previewApiKey: authData.previewApiKey,
       secureApiKey: authData.secureApiKey,
       defaultQueryConfig: {

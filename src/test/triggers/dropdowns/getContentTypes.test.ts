@@ -16,7 +16,7 @@ describe("getContentTypes", () => {
     const bundle = mockBundle;
 
     const expectedRequest = new DeliveryClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       previewApiKey: "previewAPIKey",
     })
       .types()
