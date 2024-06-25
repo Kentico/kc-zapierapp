@@ -35,7 +35,6 @@ export default {
   noun: 'Language',
   display: {
     hidden: true,
-    important: false,
     description: 'Gets languages for the input dropdown, in the order, in which they are defined in Kontent.ai.',
     label: 'Get Languages',
   },

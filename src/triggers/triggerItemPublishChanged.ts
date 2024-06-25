@@ -72,7 +72,6 @@ export default {
   key: 'deliver_variant_publish_changed',
   noun: hookLabel,
   display: {
-    important: true,
     label: hookLabel,
     description: 'Triggers when a language variant is published or unpublished.',
   },

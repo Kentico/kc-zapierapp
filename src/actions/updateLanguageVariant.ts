@@ -75,7 +75,6 @@ export const updateLanguageVariant = {
   noun: 'Update language variant',
   display: {
     hidden: false,
-    important: true,
     description: 'Updates a language variant using Kontent Management API.',
     label: 'Update Language Variant',
   },

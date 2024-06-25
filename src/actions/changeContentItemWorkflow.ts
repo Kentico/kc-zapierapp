@@ -166,7 +166,6 @@ export const changeContentItemWorkflow = {
   noun: 'Language variant workflow change',
   display: {
     'hidden': false,
-    'important': true,
     'description': 'Changes a language variant\'s workflow.',
     'label': 'Change Language Variant Workflow Step',
   },

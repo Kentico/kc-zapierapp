@@ -29,10 +29,9 @@ export default {
   noun: 'Linked item',
   display: {
     hidden: true,
-    important: false,
     description: 'Gets content items for a linked items element ordered by name.',
     label: 'Get Linked Items',
-},
+  },
   key: 'get_linked_items',
   operation: {
     perform: execute,

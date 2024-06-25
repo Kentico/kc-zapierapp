@@ -16,7 +16,6 @@ export default {
   noun: 'Content item search',
   display: {
     hidden: false,
-    important: true,
     description: 'Finds a content item matching the provided parameters. If more items match, it returns the first found item.',
     label: 'Find Content Item',
   },

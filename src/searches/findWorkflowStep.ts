@@ -55,7 +55,6 @@ export default {
   noun: 'Workflow step search',
   display: {
     hidden: false,
-    important: false,
     description: 'Finds a workflow step based on its name.',
     label: 'Find Workflow Step',
   },

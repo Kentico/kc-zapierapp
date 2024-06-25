@@ -73,7 +73,6 @@ export const findLanguage = {
   noun: 'Language search',
   display: {
     hidden: false,
-    important: false,
     description: 'Finds a language based on its ID, code name, or external ID.',
     label: 'Find Language',
   },

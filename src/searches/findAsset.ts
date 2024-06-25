@@ -105,7 +105,6 @@ export const findAsset = {
   noun: 'Asset search',
   display: {
     hidden: false,
-    important: false,
     description: 'Finds an asset based on its ID or external ID',
     label: 'Find Asset',
   },

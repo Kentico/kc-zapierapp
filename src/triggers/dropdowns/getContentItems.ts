@@ -29,7 +29,6 @@ export default {
   noun: 'Content item',
   display: {
     hidden: true,
-    important: false,
     description: 'Gets content items for the input dropdown ordered by name.',
     label: 'Get Content Items',
   },

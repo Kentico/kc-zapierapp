@@ -47,7 +47,6 @@ export const createContentItem = {
   noun: 'New content item',
   display: {
     hidden: false,
-    important: true,
     description: 'Creates a content item and language variant using Kontent Management API. The created item is not published, but only in the Draft workflow step.',
     label: 'Create Content Item',
   },
@@ -68,11 +67,11 @@ export const createContentItem = {
 } as const;
 
 export type InputData = Readonly<{
-    languageId: string;
-    contentTypeId: string;
-    name: string;
-    externalId?: string;
-    elements_header?: string;
+  languageId: string;
+  contentTypeId: string;
+  name: string;
+  externalId?: string;
+  elements_header?: string;
 }> & ElementFields;
 
 type Output = ContentItemOutputFields;

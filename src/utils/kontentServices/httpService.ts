@@ -60,7 +60,7 @@ export const createHttpService = (z: ZObject): IDeliveryClientConfig['httpServic
 
 const createResponse = (res: HttpResponse) => ({
   status: res.status,
-  headers: Object.entries(res.headers).map(([header, value]) => ({ header, value })),
+  headers: [...res.headers.entries()].map(([header, value]) => ({ header, value })),
   data: res.data,
   rawResponse: res.content,
   retryStrategy: {
@@ -69,7 +69,7 @@ const createResponse = (res: HttpResponse) => ({
   },
 });
 
-export const handleErrors = (response: HttpResponse) => {
+export const handleErrors = (response: HttpResponse): HttpResponse => {
   if (response.status === 400) {
     throw new Error(`Request failed with code ${response.status}.\nResponse: ${response.content}`);
   }

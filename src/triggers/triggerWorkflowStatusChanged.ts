@@ -63,7 +63,6 @@ export default {
   key: 'management_workflow_changed',
   noun: hookLabel,
   display: {
-    important: true,
     label: hookLabel,
     description: 'Triggers when a language variant workflow step changes.',
   },
