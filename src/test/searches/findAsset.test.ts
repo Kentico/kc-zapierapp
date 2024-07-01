@@ -36,7 +36,7 @@ describe("findAsset", () => {
     };
 
     const client = new ManagementClient({
-      projectId: bundleById.authData.projectId,
+      environmentId: bundleById.authData.projectId,
       apiKey: bundleById.authData.cmApiKey,
     });
 
@@ -48,6 +48,7 @@ describe("findAsset", () => {
 
     const expectedRawAsset: AssetContracts.IAssetModelContract = {
       id: "d0442642-6e09-44a0-a5d3-1e842030cee6",
+      codename: "best_asset",
       title: "test asset",
       url: "https://bestAsset.test",
       external_id: expectedAssetExternalId,

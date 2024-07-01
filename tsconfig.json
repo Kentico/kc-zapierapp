@@ -1,10 +1,16 @@
 {
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*"
+  ],
   "compilerOptions": {
     "target": "es2019",
     "module": "commonjs",
     "moduleResolution": "node",
-    "lib": ["esnext", "DOM"],
+    "skipLibCheck": true,
+    "lib": [
+      "esnext",
+      "DOM"
+    ],
     "outDir": "./lib",
     "rootDir": "./src",
     "strict": true,

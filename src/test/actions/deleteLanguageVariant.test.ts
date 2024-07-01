@@ -33,7 +33,7 @@ describe("deleteLanguageVariant", () => {
     });
 
     const client = new ManagementClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       apiKey: bundle.authData.cmApiKey,
     });
 
@@ -197,5 +197,9 @@ const rawVariant: LanguageVariantContracts.ILanguageVariantModelContract = {
   language: { id: rawLanguage.id },
   elements: [],
   last_modified: createUTCDate(1316, 5, 14).toISOString(),
+  workflow: {
+    workflow_identifier: { codename: "default" },
+    step_identifier: { id: "6b7590d5-75e5-4860-8cc0-02c5bffce2dc" },
+  },
   workflow_step: { id: "6b7590d5-75e5-4860-8cc0-02c5bffce2dc" },
 };

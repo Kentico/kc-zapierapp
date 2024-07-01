@@ -24,7 +24,7 @@ async function subscribeHook(z: ZObject, bundle: KontentBundle<InputData>) {
   const watchedEvents = bundle.inputData.watchedEvents?.filter(isValidEvent) ?? Object.keys(events);
 
   return createManagementClient(z, bundle)
-    .addWebhook()
+    .addLegacyWebhook()
     .withData({
       // bundle.targetUrl has the Hook URL this app should call when a recipe is created.
       name: `${bundle.inputData.name || hookLabel} (Zapier)`,

@@ -27,7 +27,7 @@ async function subscribeHook(z: ZObject, bundle: KontentBundle<InputData>) {
   }
 
   return createManagementClient(z, bundle)
-    .addWebhook()
+    .addLegacyWebhook()
     .withData({
       name: `${bundle.inputData.name || hookLabel} (Zapier)`,
       url: bundle.targetUrl,

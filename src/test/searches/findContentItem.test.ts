@@ -33,7 +33,7 @@ describe("findContentItem", () => {
     });
 
     const managementClient = new ManagementClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       apiKey: bundle.authData.cmApiKey,
     });
 
@@ -289,10 +289,11 @@ const rawVariant: LanguageVariantContracts.IListLanguageVariantsOfItemResponseCo
   item: rawContentItem,
   language: rawLanguage,
   last_modified: createUTCDate(1230, 12, 15).toISOString(),
-  workflow_step: {
-    id: "89205fc8-bf8e-4bc3-9eb2-725c9623ef40",
-    codename: "draft",
+  workflow: {
+    workflow_identifier: { codename: "default" },
+    step_identifier: { id: "89205fc8-bf8e-4bc3-9eb2-725c9623ef40" },
   },
+  workflow_step: { id: "89205fc8-bf8e-4bc3-9eb2-725c9623ef40" },
   elements: [
     {
       element: {
@@ -312,8 +313,8 @@ const rawDeliveryItem: Contracts.IContentItemContract = {
     name: rawContentItem.name,
     language: rawLanguage.codename,
     collection: "default",
-    workflow_step: rawVariant.workflow_step.codename || "",
-    workflow: null,
+    workflow_step: rawVariant.workflow_step.id || "",
+    workflow: rawVariant.workflow.workflow_identifier.codename || "",
     last_modified: rawVariant.last_modified,
     sitemap_locations: [],
   },

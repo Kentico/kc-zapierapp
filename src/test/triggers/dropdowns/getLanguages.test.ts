@@ -16,7 +16,7 @@ describe('getLanguages', () => {
     const bundle = mockBundle;
 
     const expectedRequest = new ManagementClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       apiKey: bundle.authData.cmApiKey,
     }).listLanguages();
 

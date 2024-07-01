@@ -1,6 +1,6 @@
 import { KontentBundle } from '../../types/kontentBundle';
 import { mockBundle } from './mockBundle';
-import { ManagementClient } from '@kontent-ai/management-sdk';
+import { ManagementClient, WebhookContracts } from '@kontent-ai/management-sdk';
 import * as nock from 'nock';
 import { WebhookModels } from '@kontent-ai/management-sdk/lib/models';
 import { createUTCDate } from './date';
@@ -14,7 +14,7 @@ type ExpectedInputDataBase = Readonly<{
 
 type Params<InputData extends ExpectedInputDataBase> = Readonly<{
   watchedEvents: InputData['watchedEvents'];
-  triggers: WebhookModels.IAddWebhookData['triggers'];
+  triggers: WebhookModels.IAddLegacyWebhookData['triggers'];
 }>;
 
 export const prepareMocksForWebhookSubscribeTest = <InputData extends ExpectedInputDataBase>(params: Params<InputData>) => {
@@ -33,10 +33,10 @@ export const prepareMocksForWebhookSubscribeTest = <InputData extends ExpectedIn
   const expectedName = `${bundle.inputData.name} (Zapier)`;
 
   const expectedRequest = new ManagementClient({
-    projectId: bundle.authData.projectId,
+    environmentId: bundle.authData.projectId,
     apiKey: bundle.authData.cmApiKey,
   })
-    .addWebhook()
+    .addLegacyWebhook()
     .withData({
       name: expectedName,
       url: bundle.targetUrl || "",
@@ -56,10 +56,12 @@ export const prepareMocksForWebhookSubscribeTest = <InputData extends ExpectedIn
       triggers: {
         delivery_api_content_changes: [],
         workflow_step_changes: [],
+        management_api_content_changes: [],
+        preview_delivery_api_content_changes: [],
         ...params.triggers,
       },
       last_modified: createUTCDate(1993, 1, 1).toISOString(),
-    });
+    } satisfies WebhookContracts.IAddLegacyWebhookContract);
 
   return bundle;
 }

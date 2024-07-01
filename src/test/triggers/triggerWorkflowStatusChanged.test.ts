@@ -39,14 +39,17 @@ describe("triggerWorkflowStatusChanged", () => {
 
     expect(result).toMatchInlineSnapshot(`
       {
+        "healthStatus": undefined,
         "id": "404c8821-d3ba-4794-8cee-853f3952ca99",
         "lastModified": 1993-01-01T00:00:00.000Z,
         "name": "Simple test name for webhook (Zapier)",
         "secret": "sample_secret",
         "triggers": {
           "deliveryApiContentChanges": [],
+          "managementApiContentChanges": [],
+          "previewDeliveryContentChanges": [],
           "workflowStepChanges": [
-            WebhookWorkflowStepChanges {
+            LegacyWebhookWorkflowStepChanges {
               "transitionsTo": [
                 WebhookTransitionsTo {
                   "id": "c2296c80-1ea1-444d-89a8-78118b41836a",

@@ -21,7 +21,7 @@ describe("findWorkflowStep", () => {
     });
 
     const expectedRequest = new ManagementClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       apiKey: bundle.authData.cmApiKey,
     }).listWorkflowSteps();
 
@@ -57,7 +57,7 @@ describe("findWorkflowStep", () => {
     });
 
     const expectedRequest = new ManagementClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       apiKey: bundle.authData.cmApiKey,
     }).listWorkflowSteps();
 

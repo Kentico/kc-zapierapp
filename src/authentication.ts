@@ -49,7 +49,7 @@ export const Authentication = {
 
 const checkCmApi = (z: ZObject, bundle: KontentBundle<{}>) =>
   createManagementClient(z, bundle)
-    .projectInformation()
+    .environmentInformation()
     .toPromise()
     .then(res => res.data.project);
 

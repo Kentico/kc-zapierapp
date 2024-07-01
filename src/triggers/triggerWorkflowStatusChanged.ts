@@ -17,7 +17,7 @@ async function subscribeHook(z: ZObject, bundle: KontentBundle<InputData>) {
   const stepIDs = bundle.inputData.workflowStepIds.map(i => ({ id: i }));
 
   return createManagementClient(z, bundle)
-    .addWebhook()
+    .addLegacyWebhook()
     .withData({
       name: `${bundle.inputData.name || hookLabel} (Zapier)`,
       url: bundle.targetUrl ?? '',

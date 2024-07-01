@@ -7,7 +7,6 @@ import {
   ElementContracts,
   LanguageContracts,
   LanguageVariantContracts,
-  LanguageVariantElements,
   languageVariantElementsBuilder,
   LanguageVariantElementsBuilder,
   ManagementClient,
@@ -58,7 +57,7 @@ describe("createContentItem", () => {
     });
 
     const client = new ManagementClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       apiKey: bundle.authData.cmApiKey,
     });
 
@@ -90,24 +89,23 @@ describe("createContentItem", () => {
       .upsertLanguageVariant()
       .byItemId(itemId)
       .byLanguageId(rawLanguage.id)
-      .withData(buildExpectedElements);
+      .withData(builder => ({
+        elements: buildExpectedElements(builder),
+      }));
 
     nock(expectedCreateVariantRequest.getUrl())
-      .put(
-        "",
-        JSON.stringify({
-          elements: expectedCreateVariantRequest.data(
-            languageVariantElementsBuilder
-          ),
-        })
-      )
+      .put("", JSON.stringify(expectedCreateVariantRequest.data(languageVariantElementsBuilder)))
       .reply(201, {
         item: { id: itemId },
         language: { id: rawLanguage.id },
         elements: resultElements,
         last_modified: createUTCDate(1993, 1, 1).toISOString(),
+        workflow: {
+          workflow_identifier: { codename: "default" },
+          step_identifier: { id: "3ecd7341-ad09-44b1-b457-4257ba3fa73b" },
+        },
         workflow_step: { id: "3ecd7341-ad09-44b1-b457-4257ba3fa73b" },
-      } as LanguageVariantContracts.IUpsertLanguageVariantResponseContract);
+      } satisfies LanguageVariantContracts.IUpsertLanguageVariantResponseContract);
 
     const search = App.creates[createContentItem.key].operation.perform;
 
@@ -210,6 +208,7 @@ const resultElements: ElementContracts.IContentItemElementContract[] = [
       id: "2e460e16-e006-4726-848b-9912c413d947",
     },
     value: "<p>rich value</p>",
+    components: [],
   },
   {
     element: {
@@ -271,6 +270,7 @@ const buildExpectedElements = (builder: LanguageVariantElementsBuilder) => [
   builder.richTextElement({
     element: { id: "2e460e16-e006-4726-848b-9912c413d947" },
     value: "<p>rich value</p>",
+    components: [],
   }),
   builder.taxonomyElement({
     element: { id: "f870da17-761e-49fe-a546-e52be730b05e" },

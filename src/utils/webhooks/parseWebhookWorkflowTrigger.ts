@@ -5,7 +5,7 @@ export const parseWebhookWorkflowTrigger = (v: unknown): WebhookContracts.Webhoo
     ? v
     : null;
 
-export const parseWebhookContentChangeTrigger = (v: unknown): WebhookContracts.WebhookManagementContentChangesOperations[] | null =>
+export const parseWebhookContentChangeTrigger = (v: unknown): WebhookContracts.WebhookManagementContentChangesOperation[] | null =>
   isArrayOf(isWebhookContentChangeEvent, v)
     ? v
     : null;
@@ -17,5 +17,5 @@ const isArrayOf = <T>(guard: (v: unknown) => v is T, v: unknown): v is T[] =>
 const isWebhookWorkflowEvent = (v: unknown): v is WebhookContracts.WebhookWorkflowStepOperationContract =>
   typeof v === 'string' && ['publish', 'unpublish', 'archive', 'restore', 'upsert'].includes(v);
 
-const isWebhookContentChangeEvent = (v: unknown): v is WebhookContracts.WebhookManagementContentChangesOperations =>
+const isWebhookContentChangeEvent = (v: unknown): v is WebhookContracts.WebhookManagementContentChangesOperation =>
   typeof v === 'string' && ['archive', 'create', 'restore'].includes(v);

@@ -40,7 +40,7 @@ describe("updateLanguageVariant", () => {
     });
 
     const client = new ManagementClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       apiKey: bundle.authData.cmApiKey,
     });
 
@@ -72,15 +72,15 @@ describe("updateLanguageVariant", () => {
       .upsertLanguageVariant()
       .byItemId(rawItem.id)
       .byLanguageId(rawLanguage.id)
-      .withData((builder) => [
-        builder.textElement({
-          element: { id: rawContentType.elements[0]?.id || "" },
-          value: newElementValue,
-        }),
-      ]);
-    const expectedRawBody = JSON.stringify({
-      elements: expectedUpdateRequest.data(languageVariantElementsBuilder),
-    });
+      .withData((builder) => ({
+        elements: [
+          builder.textElement({
+            element: { id: rawContentType.elements[0]?.id || "" },
+            value: newElementValue,
+          }),
+        ]
+      }));
+    const expectedRawBody = JSON.stringify(expectedUpdateRequest.data(languageVariantElementsBuilder));
     nock(expectedUpdateRequest.getUrl())
       .put("", expectedRawBody)
       .reply(200, {
@@ -175,5 +175,9 @@ const rawVariant: LanguageVariantContracts.ILanguageVariantModelContract = {
     },
   ],
   last_modified: createUTCDate(1316, 5, 14).toISOString(),
+  workflow: {
+    workflow_identifier: { codename: "default" },
+    step_identifier: { id: rawWfSteps[0]?.id || "" },
+  },
   workflow_step: { id: rawWfSteps[0]?.id || "" },
 };

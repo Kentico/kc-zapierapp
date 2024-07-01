@@ -19,14 +19,14 @@ const events = {
 
 async function subscribeHook(z: ZObject, bundle: KontentBundle<InputData>) {
   //If no events were selected, respond to all of them
-  const watchedEvents = parseWebhookContentChangeTrigger(bundle.inputData.watchedEvents) ?? Object.keys(events);
+  const watchedEvents = parseWebhookContentChangeTrigger(bundle.inputData.watchedEvents) ?? (Object.keys(events) as (keyof typeof events)[]);
 
   if (!bundle.targetUrl) {
-      throw new z.errors.Error('Missing targetUrl.');
+    throw new z.errors.Error('Missing targetUrl.');
   }
 
   return createManagementClient(z, bundle)
-    .addWebhook()
+    .addLegacyWebhook()
     .withData({
       name: `${bundle.inputData.name || hookLabel} (Zapier)`,
       url: bundle.targetUrl,

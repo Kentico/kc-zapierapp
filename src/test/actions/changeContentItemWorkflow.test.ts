@@ -20,7 +20,7 @@ describe("changeContentItemWorkflow", () => {
     });
 
     const client = new ManagementClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       apiKey: bundle.authData.cmApiKey,
     });
 
@@ -78,5 +78,9 @@ const rawVariant: LanguageVariantContracts.ILanguageVariantModelContract = {
   language: { id: "984efe5c-6898-4d51-8afa-a66b9de51cc0" },
   elements: [],
   last_modified: createUTCDate(1316, 5, 14).toISOString(),
+  workflow: {
+    workflow_identifier: { codename: "default" },
+    step_identifier: { id: rawWfSteps[0]?.id },
+  },
   workflow_step: { id: rawWfSteps[0]?.id },
 };

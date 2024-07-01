@@ -53,7 +53,8 @@ const getElementValue = (value: RawElementValue, element: ContentTypeElements.Co
   }
 };
 
-type Element = Omit<ElementModels.ContentItemElement, '_raw'>;
+type Element = Omit<ElementModels.ContentItemElement, '_raw' | 'components'> & { components?: ElementModels.ContentItemElement['components'] };
+
 export const getElementsForUpsert = (z: ZObject, bundle: KontentBundle<ExpectedInputData>, contentTypeId: string): Promise<ReadonlyArray<Element>> =>
   getContentTypeElements(z, bundle, contentTypeId)
     .then(typeElements => typeElements
@@ -75,6 +76,11 @@ export const getElementsForUpsert = (z: ZObject, bundle: KontentBundle<ExpectedI
             return {
               ...resultElement,
               mode: value !== '' ? 'custom' as const : undefined,
+            };
+          case 'rich_text':
+            return {
+              ...resultElement,
+              components: [],
             };
           default:
             return resultElement;

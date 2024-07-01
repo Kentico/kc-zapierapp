@@ -6,6 +6,6 @@ import { createHttpService } from './httpService';
 export const createManagementClient = (z: ZObject, bundle: KontentBundle<{}>) =>
   new ManagementClient({
     apiKey: bundle.authData.cmApiKey,
-    projectId: bundle.authData.projectId,
+    environmentId: bundle.authData.projectId,
     httpService: createHttpService(z),
   });

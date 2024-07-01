@@ -35,13 +35,25 @@ describe("triggerItemExistenceChanged", () => {
     const result = await appTester(subscribe, bundle);
 
     expect(result).toMatchInlineSnapshot(`
-      Webhook {
+      LegacyWebhook {
+        "healthStatus": undefined,
         "id": "404c8821-d3ba-4794-8cee-853f3952ca99",
         "lastModified": 1993-01-01T00:00:00.000Z,
         "name": "Simple test name for webhook (Zapier)",
         "secret": "sample_secret",
         "triggers": {
           "deliveryApiContentChanges": [],
+          "managementApiContentChanges": [
+            LegacyWebhookManagementApiContentChanges {
+              "operations": [
+                "create",
+                "archive",
+                "restore",
+              ],
+              "type": "content_item_variant",
+            },
+          ],
+          "previewDeliveryContentChanges": [],
           "workflowStepChanges": [],
         },
         "url": "https://test-url.test",

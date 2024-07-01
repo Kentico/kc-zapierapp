@@ -18,7 +18,7 @@ describe("findLanguage", () => {
     > = addInputData(mockBundle, { searchPattern: "{0}={1}" });
 
     const client = new ManagementClient({
-      projectId: bundle.authData.projectId,
+      environmentId: bundle.authData.projectId,
       apiKey: bundle.authData.cmApiKey,
     });
 

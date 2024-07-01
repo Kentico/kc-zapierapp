@@ -20,9 +20,9 @@ describe("Zapier authentication", () => {
     };
 
     const expectedMapiRequest = new ManagementClient({
-      projectId: authData.projectId,
+      environmentId: authData.projectId,
       apiKey: authData.cmApiKey,
-    }).projectInformation();
+    }).environmentInformation();
 
     nock(expectedMapiRequest.getUrl())
       .get("")
