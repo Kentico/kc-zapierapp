@@ -1,4 +1,9 @@
 {
   "id": 89926,
-  "key": "KenticoKontent"
+  "key": "KenticoKontent",
+  "includeInBuild": [
+    "axios/dist/node/axios.cjs",
+    "proxy-from-env/index.js",
+    "follow-redirects/"
+  ]
 }
