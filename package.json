@@ -1,6 +1,6 @@
 {
   "name": "zapier-cli",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "scripts": {
     "test": "jest",
     "build": "tsc",
@@ -13,7 +13,7 @@
   "dependencies": {
     "@kontent-ai/delivery-sdk": "^14.9.0",
     "@kontent-ai/management-sdk": "^6.4.0",
-    "zapier-platform-core": "^15.11.1"
+    "zapier-platform-core": "15.11.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
@@ -23,6 +23,6 @@
     "ts-jest": "^29.1.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.2",
-    "zapier-platform-cli": "^15.11.1"
+    "zapier-platform-cli": "15.11.1"
   }
 }
